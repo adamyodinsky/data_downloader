@@ -8,6 +8,9 @@ authors = ["Adam Yodinsky"]
 python = "^3.9"
 yfinance = "^0.1.64"
 PyYAML = "^6.0"
+influxdb-client = "^1.23.0"
+influxdb = "^5.3.1"
+munch = "^2.5.0"
 
 [tool.poetry.dev-dependencies]
 

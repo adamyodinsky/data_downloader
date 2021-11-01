@@ -1,0 +1,8 @@
+symbol: "MSFT"
+time_period: "max"
+
+db:
+  token: "NGf19SaBF5MA6x0rJjqwyumlBbtUyPPCJaby17DsPsDWbD0g9MIO7byr-zqKWd-4AGdLSU4jH-CL9R4WAQQOog=="
+  org: "local"
+  bucket: "stock_prices"
+  url: "http://localhost:8086"
