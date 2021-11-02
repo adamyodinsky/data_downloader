@@ -32,7 +32,7 @@ services:
     # Name of the container this service creates. Otherwise it's prefixed with the git repo name
     image: "dpage/pgadmin4:latest"
     restart: unless-stopped
-    env_file: .env_timescale
+    env_file: .env_pgadmin
     environment:
       PGADMIN_LISTEN_PORT: 9000
     ports:
@@ -46,6 +46,7 @@ services:
 # Creates a named volume to persist our database data
 volumes:
   timescale_volume:
+  pgadmin:
 
 # Joins our external network
 networks:
