@@ -28,12 +28,10 @@ def main():
     config = load_config()
     ticker = fetch_ticker(config.symbol)
     symbol_df = ticker.history(period=config.time_period)
-
-    print(symbol_df)
-
     client = InfluxDBClient(url=config.db.url, token=config.db.token)
     write_api = client.write_api(write_options=SYNCHRONOUS)
 
-    write_api.write(org=config.db.org, bucket=config.db.bucket, record=symbol_df, data_frame_measurement_name=config.symbol)
+    write_api.write(org=config.db.org, bucket=config.db.bucket, record=symbol_df,
+                    data_frame_measurement_name=config.symbol)
 
 main()

@@ -2,7 +2,8 @@ symbol: "MSFT"
 time_period: "max"
 
 db:
-  token: "NGf19SaBF5MA6x0rJjqwyumlBbtUyPPCJaby17DsPsDWbD0g9MIO7byr-zqKWd-4AGdLSU4jH-CL9R4WAQQOog=="
   org: "local"
-  bucket: "stock_prices"
+  name: "db0"
+  bucket: "stocks_prices"
   url: "http://localhost:8086"
+  token: "RDV6dIFHQzEKx1Hb5m30xZ0trij_4nqjTg8SjDPHYw3ZWzkQmG0Tr55GObX2m3mA_K7Qg2-CUsx0j3hot_9HgQ=="
