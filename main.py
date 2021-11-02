@@ -25,7 +25,7 @@ def fetch_ticker(symbol):
     return yf.Ticker(symbol)
 
 
-def download_prices(ticker, period='2y', interval='60m', progress=False):
+def download_prices(ticker, period='2y', interval='1d', progress=False):
     """Download stock prices to a Pandas DataFrame"""
 
     df = yf.download(
@@ -40,7 +40,7 @@ def download_prices(ticker, period='2y', interval='60m', progress=False):
 
     # Rename columns to match our database table
     df = df.rename(columns={
-        "Datetime": "time",
+        "Date": "time",
         "Open": "open",
         "High": "high",
         "Low": "low",
@@ -53,8 +53,7 @@ def download_prices(ticker, period='2y', interval='60m', progress=False):
 
 def upload_to_timescale(df, config, table_name="stock_prices"):
     """
-    Upload the stock price data to TimescaleDB as quickly and efficiently as possible
-    by truncating (i.e. removing) the existing data and copying all-new data
+    Upload the stock price data to TimescaleDB
     """
 
     with psycopg2.connect(
@@ -67,7 +66,7 @@ def upload_to_timescale(df, config, table_name="stock_prices"):
     ) as conn:
         with conn.cursor() as cursor:
             # Truncate the existing table (i.e. remove all existing rows)
-            cursor.execute(f"TRUNCATE {table_name}")
+            # cursor.execute(f"TRUNCATE {table_name}")
             conn.commit()
 
             # Now insert the brand-new data
