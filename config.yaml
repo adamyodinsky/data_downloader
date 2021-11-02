@@ -1,4 +1,7 @@
-time_period: "max"
+
+yahoo:
+  interval: "1d"
+  period: "2y"
 
 db:
   org: "local"
@@ -6,6 +9,8 @@ db:
   bucket: "stocks_prices"
   url: "http://localhost:8086"
   token: "RDV6dIFHQzEKx1Hb5m30xZ0trij_4nqjTg8SjDPHYw3ZWzkQmG0Tr55GObX2m3mA_K7Qg2-CUsx0j3hot_9HgQ=="
+  tickers_table: "stock_tickers"
+  prices_table: "stock_prices"
 
 POSTGRES_USER: postgres
 POSTGRES_PASSWORD: password

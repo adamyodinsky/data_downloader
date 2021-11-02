@@ -1,7 +1,7 @@
 import yfinance as yf
 
 
-def download_prices(ticker, period='2y', interval='1d', progress=False):
+def download_prices(ticker, period, interval, progress=False):
     """Download stock prices from yahoo as pandas DataFrame"""
 
     df = yf.download(

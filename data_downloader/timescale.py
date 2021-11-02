@@ -2,7 +2,7 @@ import psycopg2
 from io import StringIO
 
 
-def upload_data(df, config, table_name="stock_prices"):
+def upload_data(df, config, table_name):
     """
     Upload the stock price data to TimescaleDB
     """
@@ -39,7 +39,7 @@ def upload_data(df, config, table_name="stock_prices"):
             print("DataFrame uploaded to TimescaleDB")
 
 
-def get_tickers_list(config, table_name="stock_tickers"):
+def get_tickers_list(config, table_name):
     """
     Upload the stock price data to TimescaleDB
     """
