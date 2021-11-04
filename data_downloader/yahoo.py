@@ -16,7 +16,7 @@ def download_prices(ticker, period, interval, progress=False):
 
     # Rename columns to match our database table
     df = df.rename(columns={
-        "Date": "time",
+        "Date": "date",
         "Open": "open",
         "High": "high",
         "Low": "low",
