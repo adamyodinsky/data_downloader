@@ -11,7 +11,7 @@ def args_parser():
     return parser.parse_args()
 
 
-def load_config():
-    config_dict = yaml.safe_load(open("../config.yaml"))
+def load_config(path: str):
+    config_dict = yaml.safe_load(open(path))
     return DefaultMunch.fromDict(config_dict)
 

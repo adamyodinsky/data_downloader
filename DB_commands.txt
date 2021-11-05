@@ -1,0 +1,24 @@
+CREATE TABLE IF NOT EXISTS stock_tickers (
+  ticker TEXT PRIMARY KEY,
+  name TEXT,
+  industry TEXT,
+  market_cap MONEY
+);
+
+CREATE TABLE IF NOT EXISTS stock_prices (
+  date DATE NOT NULL,
+  ticker TEXT,
+  open NUMERIC,
+  high NUMERIC,
+  low NUMERIC,
+  close NUMERIC,
+  close_adj NUMERIC,
+  volume NUMERIC,
+  PRIMARY KEY (ticker, date)
+);
+
+SELECT create_hypertable('stock_prices', 'date');
+
+CREATE INDEX ON stock_prices (ticker, date DESC);
+
+CREATE INDEX ON stock_tickers (ticker, market_cap DESC);

@@ -1,15 +1,25 @@
 import yfinance as yf
+import datetime
+import logging
 
 
-def download_prices(ticker, period, interval, progress=False):
+def download_prices(ticker: str, start: datetime.date = None, end: datetime.date = None,
+                    period: str = '5y', interval: str = '1d', progress=False):
     """Download stock prices from yahoo as pandas DataFrame"""
 
-    df = yf.download(
-        tickers=ticker,
-        period=period,
-        interval=interval,
-        progress=progress
-    )
+    if start is None:
+        df = yf.download(
+            tickers=ticker,
+            period=period,
+            interval=interval,
+            progress=progress)
+    else:
+        df = yf.download(
+            tickers=ticker,
+            start=start,
+            end=end,
+            interval=interval,
+            progress=progress)
 
     df = df.reset_index()  # remove the index
     df['ticker'] = ticker  # add a column for the ticker
@@ -24,6 +34,9 @@ def download_prices(ticker, period, interval, progress=False):
         "Adj Close": "close_adj",
         "Volume": "volume",
     })
-    print(f"Downloaded {period} {ticker} stock data from yahoo")
-    return df
 
+    if start is None:
+        logging.info(f"Downloaded '{ticker}' {period} data from yahoo.")
+    else:
+        logging.info(f"Downloaded '{ticker}' ({start}-{end}) data from yahoo.")
+    return df
