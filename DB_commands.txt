@@ -1,3 +1,8 @@
+CREATE TABLE IF NOT EXISTS indices_tickers (
+  ticker TEXT PRIMARY KEY,
+  name TEXT,
+);
+
 CREATE TABLE IF NOT EXISTS stock_tickers (
   ticker TEXT PRIMARY KEY,
   name TEXT,

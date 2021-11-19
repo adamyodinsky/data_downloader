@@ -116,8 +116,3 @@ class TmDB(object):
         return response
 
 
-# TODO function that returns the last data point, and then you download yahoo data from this point and until now. if there is no last point, go back 5 years or maybe go to max?
-
-# TODO function then inserts a new ticker to the stocks_tickers table. iterates a csv file with columns, ticker, name, exchange, industry.
-
-# then you can just set a cron and let it do magic.
