@@ -10,8 +10,10 @@ db:
   bucket: "stocks_prices"
   url: "http://localhost:8086"
   token: "RDV6dIFHQzEKx1Hb5m30xZ0trij_4nqjTg8SjDPHYw3ZWzkQmG0Tr55GObX2m3mA_K7Qg2-CUsx0j3hot_9HgQ=="
-  tickers_table: "stock_tickers"
-  prices_table: "stock_prices"
+  stocks_tickers_table: "stock_tickers"
+  stocks_prices_table: "stock_prices"
+  macro_tickers_table: "macro_tickers"
+  macro_values_table: "macro_values"
 
 POSTGRES_USER: postgres
 POSTGRES_PASSWORD: password

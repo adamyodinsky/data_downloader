@@ -4,7 +4,7 @@ import logging
 
 
 def download_prices(ticker: str, start: datetime.date = None, end: datetime.date = None,
-                    period: str = '5y', interval: str = '1d', progress=False):
+                    period: str = '100y', interval: str = '1d', progress=False):
     """Download stock prices from yahoo as pandas DataFrame"""
 
     if start is None:

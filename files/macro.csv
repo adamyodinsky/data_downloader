@@ -1,0 +1,9 @@
+Symbol,Description,API
+^GSPC,S&P500,yahoo
+^IXIC,Nasdaq,yahoo
+^DJI,Dow Jones,yahoo
+^TNX,10-yr Bonds Yeild,yahoo
+^VIX,Volatility Index,yahoo
+GC=F,Gold,yahoo
+SI=F,Silver,yahoo
+CL=F,Crude Oil,yahoo

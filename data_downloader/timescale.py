@@ -51,7 +51,6 @@ class TmDB(object):
         logging.debug(f"DataFrame uploaded to TimescaleDB {table} successfully")
 
     def upsert_data(self, df, table):
-
         # Create a list of tuples from the dataframe values
         tuples = [tuple(x) for x in df.to_numpy()]
         # Comma-separated dataframe columns
@@ -68,7 +67,7 @@ class TmDB(object):
         except (Exception, psycopg2.DatabaseError) as error:
             logging.error("Error: %s" % error)
             self.conn.rollback()
-            self.cursor.close()
+            # self.cursor.close()
             return 1
         logging.debug(f"DataFrame Updated in TimescaleDB {table} successfully")
 
@@ -86,7 +85,7 @@ class TmDB(object):
         except (Exception, psycopg2.DatabaseError) as error:
             logging.error("Error: %s" % error)
             self.conn.rollback()
-            self.cursor.close()
+            # self.cursor.close()
             return 1
         logging.info("Got ticker names from TimescaleDB")
 
@@ -111,8 +110,25 @@ class TmDB(object):
         except (Exception, psycopg2.DatabaseError) as error:
             logging.error("Error: %s" % error)
             self.conn.rollback()
-            self.cursor.close()
+            # self.cursor.close()
             return 1
         return response
 
+    def get_api_source(self, table, ticker):
+        query = f"""
+               SELECT api_source
+               FROM {table}
+               WHERE ticker like '{ticker}'
+               LIMIT 1
+               """
 
+        try:
+            self.cursor.execute(query)
+            response = self.cursor.fetchone()
+            self.conn.commit()
+        except (Exception, psycopg2.DatabaseError) as error:
+            logging.error("Error: %s" % error)
+            self.conn.rollback()
+            # self.cursor.close()
+            return 1
+        return response
