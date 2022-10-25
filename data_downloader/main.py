@@ -29,5 +29,3 @@ if __name__ == "__main__":
         db.upsert_data(df=tickers_data, table=config.db.prices_table)
 
     print("All done!")
-
-# def download_last_data():
