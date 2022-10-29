@@ -3,21 +3,23 @@ import yahoo
 import helper
 import datetime
 import logging
+import os
+
 
 if __name__ == "__main__":
     logging.basicConfig(format='%(asctime)s,%(msecs)d %(levelname)-8s [%(filename)s:%(lineno)d] %(message)s',
                         datefmt='%Y-%m-%d:%H:%M:%S',
                         level=logging.INFO)
-    config = helper.load_config("../config.yaml")
+    config = helper.load_config(os.environ.get('CONFIG_PATH'))
     db = TmDB(config)
 
-    tickers = db.get_tickers_list(config.db.tickers_table)
+    tickers = db.get_tickers_list(config.db.stock_tickers_table)
 
     for index, ticker in enumerate(tickers):
         if index >= config.tickers_scale:
             break
 
-        start = db.get_last(table=config.db.prices_table, ticker=ticker[0])
+        start = db.get_last(table=config.db.stock_prices_table, ticker=ticker[0])
         if start is not None:
             start = start[1]
 
@@ -26,6 +28,6 @@ if __name__ == "__main__":
 
         logging.info(f"Uploading {ticker[0]} data to timescale")
 
-        db.upsert_data(df=tickers_data, table=config.db.prices_table)
+        db.upsert_data(df=tickers_data, table=config.db.stock_prices_table)
 
     print("All done!")
