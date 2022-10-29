@@ -6,7 +6,6 @@ import psycopg2.extras as extras
 
 
 class TmDB(object):
-
     def __init__(self, config):
         with psycopg2.connect(
                 host=config.POSTGRES_HOST,
@@ -19,13 +18,16 @@ class TmDB(object):
             self.conn = conn
             self.cursor = conn.cursor()
 
+
     def __del__(self):
         self.cursor.close()
         self.conn.close()
 
+
     def close_connection(self):
         self.cursor.close()
         self.conn.close()
+
 
     def upload_data(self, df, table):
         """
@@ -50,6 +52,7 @@ class TmDB(object):
         self.conn.commit()
         logging.debug(f"DataFrame uploaded to TimescaleDB {table} successfully")
 
+
     def upsert_data(self, df, table):
 
         # Create a list of tuples from the dataframe values
@@ -72,6 +75,7 @@ class TmDB(object):
             return 1
         logging.debug(f"DataFrame Updated in TimescaleDB {table} successfully")
 
+
     def get_tickers_list(self, table_name):
         """
         Get Stocks Ticker list
@@ -92,9 +96,11 @@ class TmDB(object):
 
         return response
 
+
     def truncate(self, table_name):
         self.cursor.execute(f"TRUNCATE {table_name}")
         self.conn.commit()
+
 
     def get_last(self, table, ticker):
         query = f"""

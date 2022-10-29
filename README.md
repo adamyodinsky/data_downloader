@@ -29,7 +29,18 @@ make start
 ```
 
 
+
 ## db_cli.py & db_vars.py
 `db_vars.py` Contains commands for creating tables, creating indices, and populating the "tickers" table. used by `db_cli.py`.
 `db_cli.py` Is a command line tool for DB administration.
 
+
+# Create Server command 
+
+```sql
+CREATE SERVER IF NOT EXISTS postgres2 FOREIGN
+DATA WRAPPER postgres_fdw
+OPTIONS (host 'timescale', dbname 'postgres', port '5432');
+```
+
+[Reference](https://www.postgresql.org/docs/current/sql-createserver.html)
