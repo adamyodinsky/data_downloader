@@ -22,7 +22,18 @@ source ./.venv/bin/activate
 3. `make db-init` - Create tables and indices.
 4. `make db-populate`- Populate the "tickers" table.
 
+
+### Connect to the DB UI
+
+1. Visit http://localhost:9000
+2. Fill
+   1. Email/Username: `my@email.com`
+   2. Password: `password`
+3. Press the login button.
+
+
 ### Start Downloading Data
+
 
 ```sh
 make start
@@ -34,7 +45,7 @@ make start
 `db_vars.py` Contains commands for creating tables, creating indices, and populating the "tickers" table. used by `db_cli.py`.
 `db_cli.py` Is a command line tool for DB administration.
 
-
+<!-- TODO not ready -->
 # Create Server command 
 
 ```sql

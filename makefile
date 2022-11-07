@@ -1,3 +1,5 @@
+.PHONY: db-up db-down db-stop db-rm db-init db-populate start docker-build run-container_interactive run-container run-container_deatched black
+
 db-up:
 	docker-compose -f ./docker-compose/timescale_docker-compose.yaml up -d
 
@@ -16,6 +18,9 @@ db-init:
 db-populate:
 	CONFIG_PATH="./config.yaml" python3 ./data_downloader/db_cli.py populate-tickers-table
 
+db-clean:
+	CONFIG_PATH="./config.yaml" python3 ./data_downloader/db_cli.py delete-tables-content
+
 start:
 	CONFIG_PATH="./config.yaml" python3 data_downloader/main.py
 
@@ -30,3 +35,6 @@ run-container:
 
 run-container_deatched:
 	docker run -d data_downloader
+
+black:
+	poetry run black . 

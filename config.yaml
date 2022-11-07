@@ -1,8 +1,6 @@
-tickers_scale: 20
-
-yahoo:
-  interval: "1d"
-  period: "2y"
+number_of_tickers: 20
+data_interval: "1d"
+data_period: 100
 
 db:
   org: "local"
