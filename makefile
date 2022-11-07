@@ -4,7 +4,10 @@ db-up:
 db-down:
 	docker-compose -f ./docker-compose/timescale_docker-compose.yaml down
 
-db-down-rm:
+db-stop:
+	docker-compose -f ./docker-compose/timescale_docker-compose.yaml stop
+
+db-rm:
 	docker-compose -f ./docker-compose/timescale_docker-compose.yaml down -v
 
 db-init:
