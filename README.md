@@ -48,7 +48,7 @@ To start developing locally you will need to:
    6. `make db-init-tables` Create tables and indices.
    7. `make db-populate-tickers-table` Populate the [stocks list table](#11-glossary).
 3. `poetry install` to install python libraries in the poetry virtual environment.
-4. `make start` Run the data downloader python code  (via poetry) and start downloading stocks data!
+4. `make run-data-downloader` Run the data downloader python code  (via poetry) and start downloading stocks data!
 
 
 ## 1.4. Project Structure
@@ -57,7 +57,7 @@ To start developing locally you will need to:
 
 - `config.yaml` A configuration file for the data_downloader, [see more about this file](#15-configuration).
 - `Dockerfile` A docker file to build a data_downloader image.
-- `Makefile` A make-file that contains shortcuts for useful commands within the context of the project. [read more about this file].
+- `Makefile` A make-file that contains shortcuts for useful commands within the context of the project, [See available commands description](#16-makefile).
 
 
 ### 1.4.2. data_downloader
