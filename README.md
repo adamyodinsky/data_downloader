@@ -57,7 +57,7 @@ To start developing locally you will need to:
 
 - `config.yaml` A configuration file for the data_downloader, [see more about this file](#15-configuration).
 - `Dockerfile` A docker file to build a data_downloader image.
-- `Makefile` A make-file that contains shortcuts for useful commands within the context of the project, [See available commands description](#16-makefile).
+- `Makefile` A make-file that contains shortcuts for useful commands within the context of the project, [see available commands description](#16-makefile).
 
 
 ### 1.4.2. data_downloader
@@ -88,7 +88,6 @@ Currently, there is only a script used for installing poetry in the data_downloa
 <!-- TODO consider replacing the config file with env vars -->
 A configuration file for the data_downloader to globally consume.
 
-
 ```
 number_of_tickers: <int> // number of tickers to iterate over
 data_period: <int> // how back to get data from in years
@@ -106,7 +105,11 @@ POSTGRES_USER: <str>
 POSTGRES_PASSWORD: <str>
 ```
 
+Note: [config.yaml](./config.yaml) is an example with a configuration for local usage.
+
 ## 1.6. Makefile
+
+A make-file that contains shortcuts for useful commands within the context of the project.
 
 - `db-up` Spin up the database containers ("pgadmin" and "timescale") using docker-compose.
 - `db-down` Remove the database containers and networks using docker-compose.
