@@ -7,7 +7,7 @@ The project uses [the Yahoo API python package](https://pypi.org/project/yfinanc
 ## Glossary
 
 - `Stocks list table` An SQL table that contains all the stocks` tickers/names that we want to get their historical price data into the "stock price" tables.
-- `Stock Price table` This is a table that contains all the historical stock prices, this table is indexed as a hyper-table, which means it is optimized for time series data. Table columns are date, ticker, open, high, low, close, close_adj, and volume. the table's primary key is (ticker, date).
+- `Stock Price table` This is a table that contains all the historical stock price data, this table is indexed as a hyper-table, which means it is optimized for time series data. Table columns are date, ticker, open, high, low, close, close_adj, and volume. the table's index and primary key are (ticker, date).
 
 ## Dependencies
 
