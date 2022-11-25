@@ -1,6 +1,8 @@
 # Data Downloader
 
-The purpose of This project is to populate an SQL database with stock data.
+The purpose of This project is to populate an SQL database with data about stocks.
+Currently, the project only supports historical price data.
+The project uses [the Yahoo API python package](https://pypi.org/project/yfinance/) to fetch the data and [timescaleDB](https://www.timescale.com/) as a time-series database.
 
 ## Glossary
 
@@ -38,22 +40,6 @@ To start developing locally you will need to:
 4. `make start` Run the data downloader python code  (via poetry) and start downloading stocks data!
 
 
-### Connect to the DB UI
-
-1. Visit http://localhost:9000
-2. Fill
-   1. Email/Username: `my@email.com`
-   2. Password: `password`
-3. Press the login button.
-
-
-### Start Downloading Data
-
-
-```sh
-make start
-```
-
 ## Project design
 
 ### db_cli.py & db_vars.py
@@ -62,13 +48,3 @@ make start
 `helpers.py` contains helpers functions, which can be also called "utils", right now containing only a "load_config" function.
 `timescale.py` A class file that encapsulates all the functionality that we need for interacting with our timescaleDB.
 `yahoo.py` A class file that encapsulates all the functionality that we need for interacting with yahoo API for getting data about stocks.
-
-
-# Create Server command 
-<!-- TODO: This is not tested yet, test it, make it work, and add this to db_cli -->
-```sql
-CREATE SERVER IF NOT EXISTS postgres2 FOREIGN
-DATA WRAPPER postgres_fdw
-OPTIONS (host 'timescale', dbname 'postgres', port '5432');
-```
-[Reference](https://www.postgresql.org/docs/current/sql-createserver.html)
