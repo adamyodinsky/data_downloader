@@ -48,3 +48,7 @@ To start developing locally you will need to:
 `helpers.py` contains helpers functions, which can be also called "utils", right now containing only a "load_config" function.
 `timescale.py` A class file that encapsulates all the functionality that we need for interacting with our timescaleDB.
 `yahoo.py` A class file that encapsulates all the functionality that we need for interacting with yahoo API for getting data about stocks.
+
+## What's next?
+
+- Handle data about the finances and fundamentals of the companies.
