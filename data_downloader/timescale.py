@@ -6,6 +6,8 @@ import psycopg2.extras as extras
 
 
 class TmDB(object):
+    '''A class that encapsulates all the functionality for interacting with timescaleDB'''
+
     def __init__(self, config):
         with psycopg2.connect(
             host=config.POSTGRES_HOST,
