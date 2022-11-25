@@ -1,5 +1,5 @@
 ########### STAGE 1 ###########
-FROM python:3.9.15 AS base
+FROM python:3.10 AS base
 ARG USERNAME=thereisnospoon
 ARG POETRY_VERSION=1.2.0
 # Setup the user
@@ -14,7 +14,7 @@ COPY . "$HOME/app"
 # alternativly could use RUN curl -sSL https://install.python-poetry.org | POETRY_VERSION=$POETRY_VERSION python3 -
 # But noot using curl to download the script, because using curl here makes docker not detect that actually nothing chaged in this layer
 # This make each docker build command to build each layer from scratch and not using the layers' caching efficiantly
-RUN POETRY_VERSION=$POETRY_VERSION python3 ./docker/install-poetry.py
+RUN POETRY_VERSION=$POETRY_VERSION python3 scripts/install-poetry.py
 
 # Install dependancies and build
 RUN $HOME/.local/bin/poetry install
@@ -22,7 +22,7 @@ RUN $HOME/.local/bin/poetry build
 
 
 ########### STAGE 2 ###########
-FROM python:3.9.15-slim AS final
+FROM python:3.10-slim AS final
 ARG USERNAME=thereisnospoon
 
 # Setup user
