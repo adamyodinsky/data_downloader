@@ -4,7 +4,6 @@
   - [1.1. Glossary](#11-glossary)
   - [1.2. Dependencies](#12-dependencies)
   - [1.3. Local Development](#13-local-development)
-    - [1.3.1. Initiate the Database](#131-initiate-the-database)
   - [1.4. Project design](#14-project-design)
     - [1.4.1. db\_cli.py \& db\_vars.py](#141-db_clipy--db_varspy)
   - [1.5. What's next?](#15-whats-next)
@@ -29,8 +28,6 @@ Get to know and install the next tools:
 
 
 ## 1.3. Local Development
-
-### 1.3.1. Initiate the Database
 
 To start developing locally you will need to:
 
