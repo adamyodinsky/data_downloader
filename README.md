@@ -15,7 +15,7 @@
 
 The purpose of This project is to populate an SQL database with data about stocks.
 Currently, the project only supports historical price data.
-The project uses [the Yahoo API python package](https://pypi.org/project/yfinance/) to fetch the data and [timescaleDB](https://www.timescale.com/) as a time-series database.
+The project uses [the Yahoo API python package](https://pypi.org/project/yfinance/) to fetch the data and [timescaleDB](https://www.timescale.com/) as a time-series database that stores the data.
 
 ## 1.1. Glossary
 
