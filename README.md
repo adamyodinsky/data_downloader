@@ -5,7 +5,8 @@
   - [1.2. Dependencies](#12-dependencies)
   - [1.3. Local Development](#13-local-development)
   - [1.4. Project design](#14-project-design)
-    - [1.4.1. db\_cli.py \& db\_vars.py](#141-db_clipy--db_varspy)
+    - [data\_downloader](#data_downloader)
+    - [docker\_compose](#docker_compose)
   - [1.5. What's next?](#15-whats-next)
 
 The purpose of This project is to populate an SQL database with data about stocks.
@@ -48,16 +49,19 @@ To start developing locally you will need to:
 
 ## 1.4. Project design
 
-### 1.4.1. db_cli.py & db_vars.py
+### data_downloader
 
-Under `data_downloader` you will find the next files:
+- `db_vars.py` Contains commands for creating tables, creating indices, and populating the "tickers" table. used by `db_cli.py`.
+- `db_cli.py` Is a command line tool for DB administration.
+- `helpers.py` contains helpers functions, which can be also called "utils", right now containing only a "load_config" function.
+- `timescale.py` A file that contains a class that encapsulates all the functionality for interacting with our timescaleDB.
+- `yahoo.py` A file with all the functions needed for interacting with yahoo API for getting data about stocks.
+- `main.py` The entry-point of the data_downloader, which downloads stocks' data.
 
-`db_vars.py` Contains commands for creating tables, creating indices, and populating the "tickers" table. used by `db_cli.py`.
-`db_cli.py` Is a command line tool for DB administration.
-`helpers.py` contains helpers functions, which can be also called "utils", right now containing only a "load_config" function.
-`timescale.py` A file that contains a class that encapsulates all the functionality for interacting with our timescaleDB.
-`yahoo.py` A file with all the functions needed for interacting with yahoo API for getting data about stocks.
-`main.py` The entry-point of the data_downloader, which downloads stocks' data.
+Under `data_downloader/files` you can find CSV files that contain the data needed for the initial population of the ["stocks list table"](#11-glossary)
+
+### docker_compose
+
 
 ## 1.5. What's next?
 
