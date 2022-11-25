@@ -1,4 +1,5 @@
-.PHONY: db-up db-down db-stop db-rm db-init db-populate start docker-build run-container_interactive run-container run-container_deatched black
+.PHONY: db-up db-down db-stop db-rm-volumes db-init-tables db-populate-tickers-table db-init-tables db-populate-tickers-table db-delete-tables-content run-data-downloader docker-build-data-downloader run-data-downloader-container-interactive run-data-downloader-container run-data-downloader-container-deatched format
+
 
 db-up:
 	docker-compose -f ./docker_compose/timescale_docker-compose.yaml up -d
@@ -9,32 +10,35 @@ db-down:
 db-stop:
 	docker-compose -f ./docker_compose/timescale_docker-compose.yaml stop
 
-db-rm:
+db-rm-volumes:
 	docker-compose -f ./docker_compose/timescale_docker-compose.yaml down -v
 
-db-init:
-	CONFIG_PATH="./config.yaml" python3 ./data_downloader/db_cli.py init
+# db-create-server: # TODO make it work
+# 	CONFIG_PATH="./config.yaml" poetry run python ./data_downloader/db_cli.py create-server
 
-db-populate:
-	CONFIG_PATH="./config.yaml" python3 ./data_downloader/db_cli.py populate-tickers-table
+db-init-tables:
+	CONFIG_PATH="./config.yaml" poetry run python ./data_downloader/db_cli.py init-tables
 
-db-clean:
-	CONFIG_PATH="./config.yaml" python3 ./data_downloader/db_cli.py delete-tables-content
+db-populate-tickers-table:
+	CONFIG_PATH="./config.yaml" poetry run python ./data_downloader/db_cli.py populate-tickers-table
 
-start:
-	CONFIG_PATH="./config.yaml" python3 data_downloader/main.py
+db-delete-tables-content:
+	CONFIG_PATH="./config.yaml" poetry run python ./data_downloader/db_cli.py delete-tables-content
 
-docker-build:
+run-data-downloader:
+	CONFIG_PATH="./config.yaml" poetry run python data_downloader/main.py
+
+docker-build-data-downloader:
 	docker build . -t data_downloader
 
-run-container_interactive:
+run-data-downloader-container-interactive:
 	docker run -it data_downloader bash
 
-run-container:
+run-data-downloader-container:
 	docker run data_downloader
 
-run-container_deatched:
+run-data-downloader-container-deatched:
 	docker run -d data_downloader
 
-black:
+format:
 	poetry run black . 

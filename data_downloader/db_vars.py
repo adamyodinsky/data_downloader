@@ -68,3 +68,11 @@ delete_stock_price_content_message = (
     f"Deleted the content from {STOCK_LIST_TABLE_NAME} table."
 )
 delete_stocks_list_content = f"DELETE FROM {STOCK_LIST_TABLE_NAME}"
+
+# TODO this is not working
+# create_server_command = """
+# CREATE SERVER IF NOT EXISTS postgres2 FOREIGN
+# DATA WRAPPER postgres_fdw
+# OPTIONS (host 'timescale', dbname 'postgres', port '5432');
+# """
+# create_server_message = "Created server successfully."

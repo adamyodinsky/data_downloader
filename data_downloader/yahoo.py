@@ -12,11 +12,9 @@ def download_prices(
 ):
     """Download stock prices from yahoo as pandas DataFrame"""
     try:
-        df = yf.download(tickers=ticker,
-                            start=start,
-                            end=end,
-                            interval=interval,
-                            progress=progress)
+        df = yf.download(
+            tickers=ticker, start=start, end=end, interval=interval, progress=progress
+        )
 
         df = df.reset_index()  # remove the index
         df["ticker"] = ticker  # add a column for the ticker
@@ -35,6 +33,8 @@ def download_prices(
         )
         logging.info(f"Downloaded '{ticker}' ({start}-{end}) data from yahoo.")
     except Exception as e:
-        logging.error(f"{e.__class__} occurred while trying to download '{ticker}' ({start}-{end}) data from yahoo.")
+        logging.error(
+            f"{e.__class__} occurred while trying to download '{ticker}' ({start}-{end}) data from yahoo."
+        )
         logging.error(e)
     return df

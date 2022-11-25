@@ -24,10 +24,16 @@ def cli():
     pass
 
 
+# TODO not working
+# @click.command(help=f"Create DB server, run it only one time. it's not idempotent.")
+# def create_server():
+#     execute_db_command(create_server_message, create_server_command)
+
+
 @click.command(
     help=f"Create and index {STOCK_PRICE_TABLE_NAME} and {STOCK_LIST_TABLE_NAME} tables"
 )
-def init():
+def init_tables():
     execute_db_command(create_stocks_list_table_message, create_stocks_list_table)
     execute_db_command(create_stock_price_table_message, create_stock_price_table)
     execute_db_command(index_stocks_list_table_message, index_stocks_list_table)
@@ -59,7 +65,8 @@ def delete_tables_content():
     execute_db_command(delete_stock_price_content_message, delete_stocks_list_content)
 
 
-cli.add_command(init)
+# TODO cli.add_command(create_server) # not working
+cli.add_command(init_tables)
 cli.add_command(populate_tickers_table)
 cli.add_command(delete_tables_content)
 

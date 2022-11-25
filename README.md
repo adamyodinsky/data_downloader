@@ -1,13 +1,17 @@
-# Data Downloader
+# 1. Data Downloader
 
-- [Data Downloader](#data-downloader)
+- [1. Data Downloader](#1-data-downloader)
   - [1.1. Glossary](#11-glossary)
   - [1.2. Dependencies](#12-dependencies)
   - [1.3. Local Development](#13-local-development)
-  - [1.4. Project design](#14-project-design)
-    - [data\_downloader](#data_downloader)
-    - [docker\_compose](#docker_compose)
-  - [1.5. What's next?](#15-whats-next)
+  - [1.4. Project Structure](#14-project-structure)
+    - [1.4.1. base folder](#141-base-folder)
+    - [1.4.2. data\_downloader](#142-data_downloader)
+    - [1.4.3. docker\_compose](#143-docker_compose)
+    - [1.4.4. scripts](#144-scripts)
+  - [1.5. Configuration](#15-configuration)
+  - [1.6. Makefile](#16-makefile)
+  - [1.7. What's next?](#17-whats-next)
 
 The purpose of This project is to populate an SQL database with data about stocks.
 Currently, the project only supports historical price data.
@@ -47,22 +51,59 @@ To start developing locally you will need to:
 4. `make start` Run the data downloader python code  (via poetry) and start downloading stocks data!
 
 
-## 1.4. Project design
+## 1.4. Project Structure
 
-### data_downloader
+### 1.4.1. base folder
 
-- `db_vars.py` Contains commands for creating tables, creating indices, and populating the "tickers" table. used by `db_cli.py`.
-- `db_cli.py` Is a command line tool for DB administration.
-- `helpers.py` contains helpers functions, which can be also called "utils", right now containing only a "load_config" function.
-- `timescale.py` A file that contains a class that encapsulates all the functionality for interacting with our timescaleDB.
-- `yahoo.py` A file with all the functions needed for interacting with yahoo API for getting data about stocks.
-- `main.py` The entry-point of the data_downloader, which downloads stocks' data.
-
-Under `data_downloader/files` you can find CSV files that contain the data needed for the initial population of the ["stocks list table"](#11-glossary)
-
-### docker_compose
+- `config.yaml` A configuration file for the data_downloader, [see more about this file](#configuration).
+- `Dockerfile` A docker file to build a data_downloader image.
+- `Makefile` A make-file that contains shortcuts for useful commands within the context of the project. [read more about this file].
 
 
-## 1.5. What's next?
+### 1.4.2. data_downloader
+
+[data_downloader](./data_downloader/) The python source code folder that populates an SQL database with data about stocks.
+
+- [`db_vars.py`](./data_downloader/db_vars.py) Contains commands for creating tables, creating indices, and populating the "tickers" table. used by `db_cli.py`.
+- [`db_cli.py`](./data_downloader/db_cli.py) Is a command line tool for DB administration.
+- [`helpers.py`](./data_downloader/helper.py) contains helpers functions, which can be also called "utils", right now containing only a "load_config" function.
+- [`timescale.py`](./data_downloader/timescale.py) A file that contains a class that encapsulates all the functionality for interacting with our timescaleDB.
+- [`yahoo.py`](./data_downloader/yahoo.py) A file with all the functions needed for interacting with yahoo API for getting data about stocks.
+- [`main.py`](./data_downloader/main.py) The entry-point of the data_downloader, which downloads stocks' data.
+
+Under [`data_downloader/files`](./data_downloader//files/) you can find CSV files that contain the data needed for the initial population of the ["stocks list table"](#11-glossary)
+
+### 1.4.3. docker_compose
+
+The [docker_compose](./docker_compose/) folder contains all the configuration files needed for spinning up the database set-up.
+
+### 1.4.4. scripts
+
+The [scripts](./scripts/) folder contains random scripts needed for the project XD
+
+## 1.5. Configuration
+
+Trying to imitate the JS style of loading configuration to your app.
+
+```
+number_of_tickers: <int>
+data_interval: "<int>d/<int>h" (in days/hours)
+data_period: <int> (in years)
+
+db:
+  stock_tickers_table: "tickers"
+  stock_prices_table: "stock_price"
+
+
+POSTGRES_HOST: localhost
+POSTGRES_USER: postgres
+POSTGRES_DB: postgres
+POSTGRES_PASSWORD: 1234
+POSTGRES_PORT: 5432
+```
+
+## 1.6. Makefile
+
+## 1.7. What's next?
 
 - Handle data about the finances and fundamentals of the companies.

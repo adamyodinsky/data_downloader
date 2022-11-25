@@ -3,10 +3,6 @@ data_interval: "1d"
 data_period: 100
 
 db:
-  org: "local"
-  name: "db0"
-  url: "http://localhost:8086"
-  token: "RDV6dIFHQzEKx1Hb5m30xZ0trij_4nqjTg8SjDPHYw3ZWzkQmG0Tr55GObX2m3mA_K7Qg2-CUsx0j3hot_9HgQ=="
   stock_tickers_table: "tickers"
   stock_prices_table: "stock_price"
 
