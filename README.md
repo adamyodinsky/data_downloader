@@ -45,8 +45,8 @@ To start developing locally you will need to:
       1. On the first page name=`postgres`.
       2. On `connection` page host=`timescale` username=`postgres` pass=`1234`.
    5. Click `Save`.
-   6. `make db-init` Create tables and indices.
-   7. `make db-populate` Populate the [stocks list table](#11-glossary).
+   6. `make db-init-tables` Create tables and indices.
+   7. `make db-populate-tickers-table` Populate the [stocks list table](#11-glossary).
 3. `poetry install` to install python libraries in the poetry virtual environment.
 4. `make start` Run the data downloader python code  (via poetry) and start downloading stocks data!
 
@@ -55,7 +55,7 @@ To start developing locally you will need to:
 
 ### 1.4.1. base folder
 
-- `config.yaml` A configuration file for the data_downloader, [see more about this file](#configuration).
+- `config.yaml` A configuration file for the data_downloader, [see more about this file](#15-configuration).
 - `Dockerfile` A docker file to build a data_downloader image.
 - `Makefile` A make-file that contains shortcuts for useful commands within the context of the project. [read more about this file].
 
@@ -79,30 +79,48 @@ The [docker_compose](./docker_compose/) folder contains all the configuration fi
 
 ### 1.4.4. scripts
 
-The [scripts](./scripts/) folder contains random scripts needed for the project XD
+The [scripts](./scripts/) folder contains random scripts needed for the project XD.
+
+Currently, there is only a script used for installing poetry in the data_downloader docker image. this is done with a local file instead of fetching it from the web with curl. Docker does not recognize it's the same layer when being fetched from the web, this results in undesired rebuilding of all the layers again and again, not using the docker layers caching mechanism.
 
 ## 1.5. Configuration
 
-Trying to imitate the JS style of loading configuration to your app.
+<!-- TODO consider replacing the config file with env vars -->
+A configuration file for the data_downloader to globally consume.
+
 
 ```
-number_of_tickers: <int>
-data_interval: "<int>d/<int>h" (in days/hours)
-data_period: <int> (in years)
+number_of_tickers: <int> // number of tickers to iterate over
+data_period: <int> // how back to get data from in years
+data_interval: "<int>d/<int>h" // interval of prices data in days/hours
 
 db:
-  stock_tickers_table: "tickers"
-  stock_prices_table: "stock_price"
+  stock_tickers_table: <str> // ticker tables name in postgres
+  stock_prices_table: <str> // stock price table name in postgres
 
 
-POSTGRES_HOST: localhost
-POSTGRES_USER: postgres
-POSTGRES_DB: postgres
-POSTGRES_PASSWORD: 1234
-POSTGRES_PORT: 5432
+POSTGRES_DB: <str> // database name
+POSTGRES_HOST: <str> // postgres domain name
+POSTGRES_PORT: <int>
+POSTGRES_USER: <str>
+POSTGRES_PASSWORD: <str>
 ```
 
 ## 1.6. Makefile
+
+- `db-up` Spin up the database containers ("pgadmin" and "timescale") using docker-compose.
+- `db-down` Remove the database containers and networks using docker-compose.
+- `db-stop` Stop the database containers using docker-compose.
+- `db-rm-volumes` Remove the database containers, networks, and volumes using docker-compose.
+- `db-init-tables` Create tables and indices.
+- `db-populate-tickers-table` Populate the [stocks list table](#11-glossary).
+- `db-delete-tables-content` Delete all table's content.
+- `run-data-downloader` Run data_downloader python code as a process via poetry.
+- `docker-build-data-downloader` build a docker image for data_downloader
+- `run-data-downloader-container` Run data_downloader container.
+- `run-data-downloader-container-interactive` Run data_downloader container in interactive mode (bash).
+-  `run-data-downloader-container-deatched` Run data_downloader container in detached head mode.
+-  `format` Format the python code of the project
 
 ## 1.7. What's next?
 

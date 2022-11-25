@@ -1,4 +1,4 @@
-.PHONY: db-up db-down db-stop db-rm-volumes db-init-tables db-populate-tickers-table db-init-tables db-populate-tickers-table db-delete-tables-content run-data-downloader docker-build-data-downloader run-data-downloader-container-interactive run-data-downloader-container run-data-downloader-container-deatched format
+.PHONY: db-up db-down db-stop db-rm-volumes db-init-tables db-populate-tickers-table db-delete-tables-content run-data-downloader docker-build-data-downloader run-data-downloader-container-interactive run-data-downloader-container run-data-downloader-container-deatched format
 
 
 db-up:

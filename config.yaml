@@ -1,14 +1,14 @@
 number_of_tickers: 20
-data_interval: "1d"
 data_period: 100
+data_interval: "1d"
 
 db:
   stock_tickers_table: "tickers"
   stock_prices_table: "stock_price"
 
 
-POSTGRES_HOST: localhost
-POSTGRES_USER: postgres
 POSTGRES_DB: postgres
-POSTGRES_PASSWORD: 1234
+POSTGRES_HOST: localhost
 POSTGRES_PORT: 5432
+POSTGRES_USER: postgres
+POSTGRES_PASSWORD: 1234
