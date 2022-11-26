@@ -10,10 +10,9 @@ class TmDB(object):
     """A singleton class that encapsulates all the functionality for interacting with timescaleDB"""
 
     def __new__(cls):
-        if not hasattr(cls, 'instance'):
+        if not hasattr(cls, "instance"):
             cls.instance = super(TmDB, cls).__new__(cls)
         return cls.instance
-
 
     def __init__(self):
         with psycopg2.connect(
@@ -27,16 +26,13 @@ class TmDB(object):
             self.conn = conn
             self.cursor = conn.cursor()
 
-
     def __del__(self):
         self.cursor.close()
         self.conn.close()
 
-
     def close_connection(self):
         self.cursor.close()
         self.conn.close()
-
 
     def upload_data(self, df, table):
         """
@@ -55,7 +51,6 @@ class TmDB(object):
         )
         self.conn.commit()
         logging.debug(f"DataFrame uploaded to TimescaleDB {table} successfully")
-
 
     def upsert_data(self, df, table):
 
@@ -82,7 +77,6 @@ class TmDB(object):
             return 1
         logging.debug(f"DataFrame Updated in TimescaleDB {table} successfully")
 
-
     def get_tickers_list(self):
         """
         Get Stocks Ticker list
@@ -103,11 +97,9 @@ class TmDB(object):
 
         return response
 
-
     def truncate(self, table_name):
         self.cursor.execute(f"TRUNCATE {table_name}")
         self.conn.commit()
-
 
     def get_last(self, table, ticker):
         query = f"""
@@ -127,7 +119,6 @@ class TmDB(object):
             self.cursor.close()
             return 1
         return response
-
 
     def get_first(self, table, ticker):
         query = f"""

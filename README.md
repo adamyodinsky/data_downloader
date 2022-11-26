@@ -2,16 +2,17 @@
 
 - [1. Data Downloader](#1-data-downloader)
   - [1.1. Glossary](#11-glossary)
-  - [1.2. Dependencies](#12-dependencies)
-  - [1.3. Local Development](#13-local-development)
-  - [1.4. Project Structure](#14-project-structure)
-    - [1.4.1. base folder](#141-base-folder)
-    - [1.4.2. data\_downloader](#142-data_downloader)
-    - [1.4.3. docker\_compose](#143-docker_compose)
-    - [1.4.4. scripts](#144-scripts)
-  - [1.5. Makefile](#15-makefile)
-  - [1.6. Environment Variables](#16-environment-variables)
-  - [1.7. What's next?](#17-whats-next)
+  - [1.2. Local Development](#12-local-development)
+    - [1.2.1. Dependencies](#121-dependencies)
+    - [1.2.2. Step-by-step instructions](#122-step-by-step-instructions)
+  - [1.3. Project Structure](#13-project-structure)
+    - [1.3.1. base folder](#131-base-folder)
+    - [1.3.2. data\_downloader](#132-data_downloader)
+    - [1.3.3. docker\_compose](#133-docker_compose)
+    - [1.3.4. scripts](#134-scripts)
+  - [1.4. Makefile](#14-makefile)
+  - [1.5. Environment Variables](#15-environment-variables)
+  - [1.6. What's next?](#16-whats-next)
 
 The purpose of This project is to populate an SQL database with data about stocks.
 Currently, the project only supports historical price data.
@@ -23,7 +24,9 @@ The project uses [the Yahoo API python package](https://pypi.org/project/yfinanc
 - `Stock Price table` This is a table that contains all the historical stock price data, this table is indexed as a hyper-table, which means it is optimized for time series data. Table columns are date, ticker, open, high, low, close, close_adj, and volume. the table's index and primary key are (ticker, date).
 
 
-## 1.2. Dependencies
+## 1.2. Local Development
+
+### 1.2.1. Dependencies
 
 Get to know and install the next tools:
 
@@ -33,11 +36,11 @@ Get to know and install the next tools:
 - [docker-compose](https://docs.docker.com/compose/install/)
 
 
-## 1.3. Local Development
+### 1.2.2. Step-by-step instructions
 
 To start developing locally you will need to:
 
-1. Install the [dependencies](#12-dependencies).
+1. Install the [dependencies](#121-dependencies).
 2. Start your timescaleDB engines ON.
    1. `make db-up` Spin up a timescaleDB via docker-compose. you can see the running containers with "docker ps" command.
    2. Open the browser at http://localhost:9000 for the PGAdmin UI.
@@ -48,19 +51,19 @@ To start developing locally you will need to:
    5. Click `Save`.
    6. `make db-init-tables` Create tables and indices.
    7. `make db-populate-tickers-table` Populate the [stocks list table](#11-glossary).
-3. `poetry install` to install python libraries in the poetry virtual environment.
+3. `make setup` to install python libraries in the poetry virtual environment.
 4. `make run-data-downloader` Run the data downloader python code  (via poetry) and start downloading stocks data!
 
 
-## 1.4. Project Structure
+## 1.3. Project Structure
 
-### 1.4.1. base folder
+### 1.3.1. base folder
 
 - `Dockerfile` A docker file to build a data_downloader image.
-- `Makefile` A make-file that contains shortcuts for useful commands within the context of the project, [see available commands description](#16-makefile).
+- `Makefile` A make-file that contains shortcuts for useful commands within the context of the project, [see available commands description](#14-makefile).
 
 
-### 1.4.2. data_downloader
+### 1.3.2. data_downloader
 
 [data_downloader](./data_downloader/) The python source code folder that populates an SQL database with data about stocks.
 
@@ -73,20 +76,18 @@ To start developing locally you will need to:
 
 Under [`data_downloader/files`](./data_downloader//files/) you can find CSV files that contain the data needed for the initial population of the ["stocks list table"](#11-glossary), and a `.env` file for local development.
 
-### 1.4.3. docker_compose
+### 1.3.3. docker_compose
 
 The [docker_compose](./docker_compose/) folder contains all the configuration files needed for spinning up the database set-up.
 
-### 1.4.4. scripts
+### 1.3.4. scripts
 
 The [scripts](./scripts/) folder contains random scripts needed for the project XD.
 
 Currently, there is only a script used for installing poetry in the data_downloader docker image. this is done with a local file instead of fetching it from the web with curl. Docker does not recognize it's the same layer when being fetched from the web, this results in undesired rebuilding of all the layers, again and again, not using the docker layers caching mechanism.
 
 
-Note: [config.yaml](./config.yaml) is an example with a configuration for local usage.
-
-## 1.5. Makefile
+## 1.4. Makefile
 
 A make-file that contains shortcuts for useful commands within the context of the project.
 
@@ -102,14 +103,15 @@ A make-file that contains shortcuts for useful commands within the context of th
 - `run-data-downloader-container` Run data_downloader container.
 - `run-data-downloader-container-interactive` Run data_downloader container in interactive mode (bash).
 -  `run-data-downloader-container-deatched` Run data_downloader container in detached head mode.
--  `format` Format the python code of the project
+-  `format` Format the python code of the project.
+-  `setup` Set poetry to create a virtual environment in the project folder and installs python dependencies.
 
 
-## 1.6. Environment Variables
+## 1.5. Environment Variables
 
 - `NUMBER_OF_TICKERS` Number of tickers to iterate over.
 - `DATA_PERIOD` how back to get data from in years.
-- `DATA_INTERVAL` Interval of prices data in days/hours (examples: "1d" or "1h").
+- `DATA_INTERVAL` Interval of price data in days/hours (examples: "1d" or "1h").
 - `DB_STOCK_TICKERS_TABLE` Ticker tables name in postgres.
 - `DB_STOCK_PRICE_TABLE` Stock price table name in postgres.
 - `POSTGRES_DB` Database name.
@@ -119,6 +121,6 @@ A make-file that contains shortcuts for useful commands within the context of th
 - `POSTGRES_PASSWORD` Postgres password.
 
 
-## 1.7. What's next?
+## 1.6. What's next?
 
 - Handle data about the finances and fundamentals of the companies.

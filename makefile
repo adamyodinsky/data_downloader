@@ -14,19 +14,19 @@ db-rm-volumes:
 	docker-compose -f ./docker_compose/timescale_docker-compose.yaml down -v
 
 # db-create-server: # TODO make it work
-# 	CONFIG_PATH="./config.yaml" poetry run python ./data_downloader/db_cli.py create-server
+# 	poetry run python ./data_downloader/db_cli.py create-server
 
 db-init-tables:
-	CONFIG_PATH="./config.yaml" poetry run python ./data_downloader/db_cli.py init-tables
+	poetry run python ./data_downloader/db_cli.py init-tables
 
 db-populate-tickers-table:
-	CONFIG_PATH="./config.yaml" poetry run python ./data_downloader/db_cli.py populate-tickers-table
+	poetry run python ./data_downloader/db_cli.py populate-tickers-table
 
 db-delete-tables-content:
-	CONFIG_PATH="./config.yaml" poetry run python ./data_downloader/db_cli.py delete-tables-content
+	poetry run python ./data_downloader/db_cli.py delete-tables-content
 
 run-data-downloader:
-	CONFIG_PATH="./config.yaml" poetry run python data_downloader/main.py
+	poetry run python data_downloader/main.py
 
 docker-build-data-downloader:
 	docker build . -t data_downloader
@@ -42,3 +42,6 @@ run-data-downloader-container-deatched:
 
 format:
 	poetry run black . 
+
+setup:
+	poetry config virtualenvs.in-project true && poetry install
