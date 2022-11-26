@@ -1,31 +1,34 @@
 from timescale import TmDB
 import yahoo
-import helper
+import utils
 import datetime
 from dateutil.relativedelta import relativedelta
 import logging
 import os
+import click
+
 
 @click.group()
 def cli():
-    pass
+    utils.load_env("files/.env") 
 
 
-def _get_starting_date():
+def _get_starting_date(db: TmDB, ticker: str, current_date):
     """Get the first date from where we want the data series we downloading will begin from.
     If there is no data at all, it will download the data by the data_period provided in the config.yaml file.
     If there is data, but there is a new data that should be downloaded, or the data_period is going further back from our oldest data_point, the missing data will be downloaded and added to the existing data.
     """
 
+    
     start = None
     first_data_point_date = db.get_first(
-        table=config.db.stock_prices_table, ticker=ticker[0]
+        table=os.environ.get("DB_STOCK_PRICE_TABLE"), ticker=ticker
     )
     last_data_point_date = db.get_last(
-        table=config.db.stock_prices_table, ticker=ticker[0]
+        table=os.environ.get("DB_STOCK_PRICE_TABLE"), ticker=ticker
     )
     period_date = (
-        current_date - relativedelta(years=config.data_period) + relativedelta(weeks=1)
+        current_date - relativedelta(years=os.environ.get("DATA_PERIOD")) + relativedelta(weeks=1)
     )
 
     # if period go further in the past compared to the oldest record, use period
@@ -54,36 +57,35 @@ def download_data(number_of_tickers: int, data_period: int, data_interval: str):
         level=logging.INFO,
     )
 
-    # Load config.yaml and get today's date for future use
-    config = helper.load_config(os.environ.get("CONFIG_PATH"))
     current_date = datetime.date.today()
 
     # Prepare stock tickers to iterate over and get their data
-    db = TmDB(config)
-    tickers = db.get_tickers_list(config.db.stock_tickers_table)
+    db = TmDB()
+    tickers = db.get_tickers_list()
 
     # Download stocks data and save into DB
     for index, ticker in enumerate(tickers):
         # a limit for a number of stocks we want to get data on from the list, this should be use only in dev.
-        if config.number_of_tickers and index >= config.number_of_tickers:
+        if os.environ.get("NUMBER_OF_TICKERS") and index >= os.environ.get("NUMBER_OF_TICKERS"):
             break
 
-        start = _get_starting_date()
+        start = _get_starting_date(db, ticker[0], current_date)
 
         if start != current_date:  # prevent an API call when there is no need
             tickers_data = yahoo.download_prices(
                 ticker=ticker[0],
                 start=start,
                 end=current_date,
-                interval=config.data_interval,
+                interval=os.environ.get("DATA_INTERVAL"),
             )
             logging.info(f"Uploading {ticker[0]} data to DB.")
-            db.upsert_data(df=tickers_data, table=config.db.stock_prices_table)
+            db.upsert_data(df=tickers_data, table=os.environ.get("DB_STOCK_PRICE_TABLE"))
         else:
             logging.info(f"{ticker[0]} Is up to date, no action needed.")
 
     logging.info("Data updated successfully.")
 
 
-cli.add_command(init_tables)
+cli.add_command(download_data)
+
 cli()

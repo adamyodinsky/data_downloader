@@ -9,8 +9,8 @@
     - [1.4.2. data\_downloader](#142-data_downloader)
     - [1.4.3. docker\_compose](#143-docker_compose)
     - [1.4.4. scripts](#144-scripts)
-  - [1.5. Configuration](#15-configuration)
-  - [1.6. Makefile](#16-makefile)
+  - [1.5. Makefile](#15-makefile)
+  - [1.6. Environment Variables](#16-environment-variables)
   - [1.7. What's next?](#17-whats-next)
 
 The purpose of This project is to populate an SQL database with data about stocks.
@@ -21,6 +21,7 @@ The project uses [the Yahoo API python package](https://pypi.org/project/yfinanc
 
 - `Stocks list table` An SQL table that contains all the stocks` tickers/names that we want to get their historical price data into the "stock price" tables.
 - `Stock Price table` This is a table that contains all the historical stock price data, this table is indexed as a hyper-table, which means it is optimized for time series data. Table columns are date, ticker, open, high, low, close, close_adj, and volume. the table's index and primary key are (ticker, date).
+
 
 ## 1.2. Dependencies
 
@@ -55,7 +56,6 @@ To start developing locally you will need to:
 
 ### 1.4.1. base folder
 
-- `config.yaml` A configuration file for the data_downloader, [see more about this file](#15-configuration).
 - `Dockerfile` A docker file to build a data_downloader image.
 - `Makefile` A make-file that contains shortcuts for useful commands within the context of the project, [see available commands description](#16-makefile).
 
@@ -71,7 +71,7 @@ To start developing locally you will need to:
 - [`yahoo.py`](./data_downloader/yahoo.py) A file with all the functions needed for interacting with yahoo API for getting data about stocks.
 - [`main.py`](./data_downloader/main.py) The entry-point of the data_downloader, which downloads stocks' data.
 
-Under [`data_downloader/files`](./data_downloader//files/) you can find CSV files that contain the data needed for the initial population of the ["stocks list table"](#11-glossary)
+Under [`data_downloader/files`](./data_downloader//files/) you can find CSV files that contain the data needed for the initial population of the ["stocks list table"](#11-glossary), and a `.env` file for local development.
 
 ### 1.4.3. docker_compose
 
@@ -81,33 +81,12 @@ The [docker_compose](./docker_compose/) folder contains all the configuration fi
 
 The [scripts](./scripts/) folder contains random scripts needed for the project XD.
 
-Currently, there is only a script used for installing poetry in the data_downloader docker image. this is done with a local file instead of fetching it from the web with curl. Docker does not recognize it's the same layer when being fetched from the web, this results in undesired rebuilding of all the layers again and again, not using the docker layers caching mechanism.
+Currently, there is only a script used for installing poetry in the data_downloader docker image. this is done with a local file instead of fetching it from the web with curl. Docker does not recognize it's the same layer when being fetched from the web, this results in undesired rebuilding of all the layers, again and again, not using the docker layers caching mechanism.
 
-## 1.5. Configuration
-
-<!-- TODO consider replacing the config file with env vars -->
-A configuration file for the data_downloader to globally consume.
-
-```
-number_of_tickers: <int> // number of tickers to iterate over
-data_period: <int> // how back to get data from in years
-data_interval: "<int>d/<int>h" // interval of prices data in days/hours
-
-db:
-  stock_tickers_table: <str> // ticker tables name in postgres
-  stock_prices_table: <str> // stock price table name in postgres
-
-
-POSTGRES_DB: <str> // database name
-POSTGRES_HOST: <str> // postgres domain name
-POSTGRES_PORT: <int>
-POSTGRES_USER: <str>
-POSTGRES_PASSWORD: <str>
-```
 
 Note: [config.yaml](./config.yaml) is an example with a configuration for local usage.
 
-## 1.6. Makefile
+## 1.5. Makefile
 
 A make-file that contains shortcuts for useful commands within the context of the project.
 
@@ -124,6 +103,21 @@ A make-file that contains shortcuts for useful commands within the context of th
 - `run-data-downloader-container-interactive` Run data_downloader container in interactive mode (bash).
 -  `run-data-downloader-container-deatched` Run data_downloader container in detached head mode.
 -  `format` Format the python code of the project
+
+
+## 1.6. Environment Variables
+
+- `NUMBER_OF_TICKERS` Number of tickers to iterate over.
+- `DATA_PERIOD` how back to get data from in years.
+- `DATA_INTERVAL` Interval of prices data in days/hours (examples: "1d" or "1h").
+- `DB_STOCK_TICKERS_TABLE` Ticker tables name in postgres.
+- `DB_STOCK_PRICE_TABLE` Stock price table name in postgres.
+- `POSTGRES_DB` Database name.
+- `POSTGRES_HOST` Postgres domain name.
+- `POSTGRES_PORT` Postgres port.
+- `POSTGRES_USER` Postgres username.
+- `POSTGRES_PASSWORD` Postgres password.
+
 
 ## 1.7. What's next?
 

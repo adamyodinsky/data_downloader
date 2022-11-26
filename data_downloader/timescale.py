@@ -3,30 +3,40 @@ import logging
 import psycopg2
 from io import StringIO
 import psycopg2.extras as extras
+import os
 
 
 class TmDB(object):
-    """A class that encapsulates all the functionality for interacting with timescaleDB"""
+    """A singleton class that encapsulates all the functionality for interacting with timescaleDB"""
 
-    def __init__(self, config):
+    def __new__(cls):
+        if not hasattr(cls, 'instance'):
+            cls.instance = super(TmDB, cls).__new__(cls)
+        return cls.instance
+
+
+    def __init__(self):
         with psycopg2.connect(
-            host=config.POSTGRES_HOST,
-            port=config.POSTGRES_PORT,
-            dbname=config.POSTGRES_DB,
-            user=config.POSTGRES_USER,
-            password=config.POSTGRES_PASSWORD,
+            host=os.environ.get("POSTGRES_HOST"),
+            port=os.environ.get("POSTGRES_PORT"),
+            dbname=os.environ.get("POSTGRES_DB"),
+            user=os.environ.get("POSTGRES_USER"),
+            password=os.environ.get("POSTGRES_PASSWORD"),
             connect_timeout=5,
         ) as conn:
             self.conn = conn
             self.cursor = conn.cursor()
 
+
     def __del__(self):
         self.cursor.close()
         self.conn.close()
 
+
     def close_connection(self):
         self.cursor.close()
         self.conn.close()
+
 
     def upload_data(self, df, table):
         """
@@ -45,6 +55,7 @@ class TmDB(object):
         )
         self.conn.commit()
         logging.debug(f"DataFrame uploaded to TimescaleDB {table} successfully")
+
 
     def upsert_data(self, df, table):
 
@@ -71,13 +82,14 @@ class TmDB(object):
             return 1
         logging.debug(f"DataFrame Updated in TimescaleDB {table} successfully")
 
-    def get_tickers_list(self, table_name):
+
+    def get_tickers_list(self):
         """
         Get Stocks Ticker list
         ":return: stocks ticker list from TimescaleDB
         """
 
-        query = f"SELECT ticker FROM {table_name};"
+        query = f"SELECT ticker FROM {os.environ.get('DB_STOCK_TICKERS_TABLE')};"
         try:
             self.cursor.execute(query)
             response = self.cursor.fetchall()
@@ -91,9 +103,11 @@ class TmDB(object):
 
         return response
 
+
     def truncate(self, table_name):
         self.cursor.execute(f"TRUNCATE {table_name}")
         self.conn.commit()
+
 
     def get_last(self, table, ticker):
         query = f"""
@@ -113,6 +127,7 @@ class TmDB(object):
             self.cursor.close()
             return 1
         return response
+
 
     def get_first(self, table, ticker):
         query = f"""

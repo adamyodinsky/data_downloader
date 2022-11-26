@@ -8,7 +8,7 @@ print(path)
 
 config = helper.load_config(os.environ.get("CONFIG_PATH"))
 
-STOCK_PRICE_TABLE_NAME = config.db.stock_prices_table
+STOCK_PRICE_TABLE_NAME = os.environ.get("DB_STOCK_PRICE_TABLE")
 STOCK_LIST_TABLE_NAME = config.db.stock_tickers_table
 
 # Create tickers list table
