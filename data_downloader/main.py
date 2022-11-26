@@ -6,6 +6,10 @@ from dateutil.relativedelta import relativedelta
 import logging
 import os
 
+@click.group()
+def cli():
+    pass
+
 
 def _get_starting_date():
     """Get the first date from where we want the data series we downloading will begin from.
@@ -37,7 +41,12 @@ def _get_starting_date():
     return start
 
 
-if __name__ == "__main__":
+@click.command(
+    help=f"Create and index {STOCK_PRICE_TABLE_NAME} and {STOCK_LIST_TABLE_NAME} tables"
+)
+
+
+def download_data(number_of_tickers: int, data_period: int, data_interval: str):
     # Set logger configuration
     logging.basicConfig(
         format="%(asctime)s,%(msecs)d %(levelname)-8s [%(filename)s:%(lineno)d] %(message)s",
@@ -74,3 +83,7 @@ if __name__ == "__main__":
             logging.info(f"{ticker[0]} Is up to date, no action needed.")
 
     logging.info("Data updated successfully.")
+
+
+cli.add_command(init_tables)
+cli()
