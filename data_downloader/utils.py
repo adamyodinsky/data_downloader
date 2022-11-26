@@ -1,5 +1,6 @@
 from dotenv import load_dotenv
 from pathlib import Path
+from timescale import TmDB
 
 
 def load_env(path: str):

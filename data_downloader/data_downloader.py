@@ -33,7 +33,7 @@ def cli(ctx, data_period: int = None, data_interval: str = None):
     help=f"Download historical price data for a list of stocks"
 )
 @click.option('-n', '--number-of-tickers', type=int, default=None, help='Number of tickers to iterate over.')
-def download_data(ctx, number_of_tickers: int = None):
+def get_stocks_data(ctx, number_of_tickers: int = None):
     number_of_tickers = number_of_tickers or os.environ.get("NUMBER_OF_TICKERS")
     tickers = ctx.obj["db"].get_tickers_list()
 
@@ -43,7 +43,7 @@ def download_data(ctx, number_of_tickers: int = None):
         if number_of_tickers and index >= number_of_tickers:
             break
 
-        download_ticker_data(ctx, ticker[0])
+        get_stock_data(ctx, ticker[0])
 
     logging.info("Stocks data updated successfully.")
 
@@ -52,7 +52,7 @@ def download_data(ctx, number_of_tickers: int = None):
     help=f"Download a specific stock historical price data"
 )
 @click.option('-t', '--ticker', type=str, help="Stock ticker")
-def download_ticker_data(ctx, ticker: str):
+def get_stock_data(ctx, ticker: str):
     start = utils.get_starting_date(ctx.obj["db"], ticker, ctx.obj["data_period"], ctx.obj["current_date"])
 
     # Download stock data and save into DB
@@ -73,6 +73,7 @@ def download_ticker_data(ctx, ticker: str):
     logging.info("Data updated successfully.")
 
 
-cli.add_command(download_data)
+cli.add_command(get_stocks_data)
+cli.add_command(get_stock_data)
 
 cli()
