@@ -9,10 +9,10 @@ import os
 class TmDB(object):
     """A singleton class that encapsulates all the functionality for interacting with timescaleDB"""
 
-    def __new__(cls):
-        if not hasattr(cls, "instance"):
-            cls.instance = super(TmDB, cls).__new__(cls)
-        return cls.instance
+    # def __new__(cls):
+    #     if not hasattr(cls, "instance"):
+    #         cls.instance = super(TmDB, cls).__new__(cls)
+    #     return cls.instance
 
     def __init__(self):
         with psycopg2.connect(

@@ -1,6 +1,7 @@
 from dotenv import load_dotenv
 from pathlib import Path
 from timescale import TmDB
+from dateutil.relativedelta import relativedelta
 
 
 def load_env(path: str):

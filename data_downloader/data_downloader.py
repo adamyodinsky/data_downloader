@@ -2,7 +2,6 @@ from timescale import TmDB
 import yahoo
 import utils
 import datetime
-from dateutil.relativedelta import relativedelta
 import logging
 import os
 import click
@@ -13,6 +12,7 @@ import click
 @click.option('-i', '--data-interval', type=str, default=None, help='Intervals of data points, <number>h for hours, <number>d for days.')
 @click.pass_context
 def cli(ctx, data_period: int = None, data_interval: str = None):
+    ctx.ensure_object(dict)
     # Load env variables from .env file
     utils.load_env("files/.env")
 
@@ -27,12 +27,15 @@ def cli(ctx, data_period: int = None, data_interval: str = None):
     ctx.obj["data_interval"] = data_interval or os.environ.get("DATA_INTERVAL")
     ctx.obj["current_date"] = datetime.date.today()
     ctx.obj["db"] = TmDB()
+
+    return ctx
     
 
 @click.command(
     help=f"Download historical price data for a list of stocks"
 )
 @click.option('-n', '--number-of-tickers', type=int, default=None, help='Number of tickers to iterate over.')
+@click.pass_context
 def get_stocks_data(ctx, number_of_tickers: int = None):
     number_of_tickers = number_of_tickers or os.environ.get("NUMBER_OF_TICKERS")
     tickers = ctx.obj["db"].get_tickers_list()
@@ -52,6 +55,7 @@ def get_stocks_data(ctx, number_of_tickers: int = None):
     help=f"Download a specific stock historical price data"
 )
 @click.option('-t', '--ticker', type=str, help="Stock ticker")
+@click.pass_context
 def get_stock_data(ctx, ticker: str):
     start = utils.get_starting_date(ctx.obj["db"], ticker, ctx.obj["data_period"], ctx.obj["current_date"])
 
