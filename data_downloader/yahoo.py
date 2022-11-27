@@ -31,7 +31,9 @@ def download_prices(
                 "Volume": "volume",
             }
         )
-        logging.info(f"Downloaded data from yahoo for '{ticker}' from {start} to {end}.")
+        logging.info(
+            f"Downloaded data from yahoo for '{ticker}' from {start} to {end}."
+        )
     except Exception as e:
         logging.error(
             f"{e.__class__} occurred while trying to download data from yahoo for '{ticker}' from ({start} to {end} ."
