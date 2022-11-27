@@ -14,8 +14,7 @@
   - [1.5. Environment Variables](#15-environment-variables)
   - [1.6. What's next?](#16-whats-next)
 
-The purpose of This project is to populate an SQL database with data about stocks.
-Currently, the project only supports historical price data.
+A command line that can populate a timescaleDB database with historical price data of stocks.
 The project uses [the Yahoo API python package](https://pypi.org/project/yfinance/) to fetch the data and [timescaleDB](https://www.timescale.com/) as a time-series database that stores the data.
 
 ## 1.1. Glossary
@@ -72,7 +71,7 @@ To start developing locally you will need to:
 - [`helpers.py`](./data_downloader/helper.py) contains helpers functions, which can be also called "utils", right now containing only a "load_config" function.
 - [`timescale.py`](./data_downloader/timescale.py) A file that contains a class that encapsulates all the functionality for interacting with our timescaleDB.
 - [`yahoo.py`](./data_downloader/yahoo.py) A file with all the functions needed for interacting with yahoo API for getting data about stocks.
-- [`main.py`](./data_downloader/main.py) The entry-point of the data_downloader, which downloads stocks' data.
+- [`data_downloader.py`](./data_downloader/main.py) The entry-point for a command line tool that downloads stocks' data from yahoo.
 
 Under [`data_downloader/files`](./data_downloader//files/) you can find CSV files that contain the data needed for the initial population of the ["stocks list table"](#11-glossary), and a `.env` file for local development.
 
@@ -98,28 +97,30 @@ A make-file that contains shortcuts for useful commands within the context of th
 - `db-init-tables` Create tables and indices.
 - `db-populate-tickers-table` Populate the [stocks list table](#11-glossary).
 - `db-delete-tables-content` Delete all table's content.
-- `run-data-downloader` Run data_downloader python code as a process via poetry.
+- `make run-get-stock-data ARGS=<args>` Run data_downloader cli to download specific stock data, use "ARGS=--help" to see all available options.
+- `make run-get-stock-data ARGS=<args>` Run data_downloader cli to download data for a list of stocks, use "ARGS=--help" to see all available options.
 - `docker-build-data-downloader` build a docker image for data_downloader
 - `run-data-downloader-container` Run data_downloader container.
 - `run-data-downloader-container-interactive` Run data_downloader container in interactive mode (bash).
--  `run-data-downloader-container-deatched` Run data_downloader container in detached head mode.
--  `format` Format the python code of the project.
--  `setup` Set poetry to create a virtual environment in the project folder and installs python dependencies.
+- `run-data-downloader-container-deatched` Run data_downloader container in detached head mode.
+- `format` Format the python code of the project.
+- `setup` Set poetry to create a virtual environment in the project folder and installs python dependencies.
 
 
 ## 1.5. Environment Variables
 
-- `NUMBER_OF_TICKERS` Number of tickers to iterate over.
-- `DATA_PERIOD` how back to get data from in years.
-- `DATA_INTERVAL` Interval of price data in days/hours (examples: "1d" or "1h").
-- `DB_STOCK_TICKERS_TABLE` Ticker tables name in postgres.
-- `DB_STOCK_PRICE_TABLE` Stock price table name in postgres.
-- `POSTGRES_DB` Database name.
-- `POSTGRES_HOST` Postgres domain name.
-- `POSTGRES_PORT` Postgres port.
-- `POSTGRES_USER` Postgres username.
-- `POSTGRES_PASSWORD` Postgres password.
-
+- `ENV_FILE_PATH` *(optional)* Environment variables.
+- `TICKERS` *(optional)* A whitespace-separated tickers list, for example: "MSFT ADSK GOOGL".
+- `NUMBER_OF_TICKERS` *(optional)* Number of tickers to iterate over.
+- `DATA_PERIOD` *(optional)* How back to get data from in years.
+- `DATA_INTERVAL` *(optional)* Interval of price data in days/hours (examples: "1d" or "1h").
+- `DB_STOCK_TICKERS_TABLE` *(required)* Ticker tables name in timescaleDB.
+- `DB_STOCK_PRICE_TABLE` *(required)* Stock price table name in timescaleDB.
+- `POSTGRES_DB` *(required)* Database name.
+- `POSTGRES_HOST` *(required)* Postgres domain name.
+- `POSTGRES_PORT` *(required)* Postgres port.
+- `POSTGRES_USER` *(required)* Postgres username.
+- `POSTGRES_PASSWORD` *(required)* Postgres password.
 
 ## 1.6. What's next?
 

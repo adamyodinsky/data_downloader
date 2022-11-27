@@ -1,4 +1,4 @@
-.PHONY: db-up db-down db-stop db-rm-volumes db-init-tables db-populate-tickers-table db-delete-tables-content run-data-downloader docker-build-data-downloader run-data-downloader-container-interactive run-data-downloader-container run-data-downloader-container-deatched format
+.PHONY: db-up db-down db-stop db-rm-volumes db-init-tables db-populate-tickers-table db-delete-tables-content run-get-stock-data run-get-stocks-data docker-build-data-downloader run-data-downloader-container-interactive run-data-downloader-container run-data-downloader-container-deatched format
 
 
 db-up:
@@ -25,8 +25,11 @@ db-populate-tickers-table:
 db-delete-tables-content:
 	poetry run python ./data_downloader/db_cli.py delete-tables-content
 
-run-data-downloader:
-	poetry run python data_downloader/main.py
+run-get-stock-data:
+	ENV_FILE_PATH="${PWD}/files/.env" poetry run python data_downloader/data_downloader.py get-stock-data $(ARGS)
+
+run-get-stocks-data:
+	ENV_FILE_PATH="${PWD}/files/.env" poetry run python data_downloader/data_downloader.py get-stocks-data $(ARGS)
 
 docker-build-data-downloader:
 	docker build . -t data_downloader

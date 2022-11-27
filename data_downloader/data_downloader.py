@@ -28,6 +28,7 @@ def cli(ctx, data_period: int = None, data_interval: str = None):
     ctx.ensure_object(dict)
     # Load env variables from .env file
     utils.load_env(os.environ.get("ENV_FILE_PATH"))
+    utils.check_env_vars()
 
     # Set logger configuration
     logging.basicConfig(
@@ -93,7 +94,7 @@ def get_stocks_data(ctx, tickers: str = None, number_of_tickers: int = None):
 
 
 @click.command(help=f"Download a specific stock historical price data")
-@click.option("-t", "--ticker", type=str, help="A single stock ticker")
+@click.option("-t", "--ticker", type=str, help="A single stock ticker", required=True)
 @click.pass_context
 def get_stock_data(ctx: click.Context, ticker: str):
     _get_stock_data(

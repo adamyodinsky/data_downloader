@@ -11,6 +11,7 @@ def download_prices(
     progress=False,
 ):
     """Download stock prices from yahoo as pandas DataFrame"""
+
     try:
         df = yf.download(
             tickers=ticker, start=start, end=end, interval=interval, progress=progress
