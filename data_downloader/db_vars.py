@@ -1,12 +1,9 @@
 # This file contain database administration commands to be used be dv_cmd.py functions
 import os
-import helper
 
 path = os.path.dirname(__file__)
 print(path)
 
-
-config = helper.load_config(os.environ.get("CONFIG_PATH"))
 
 STOCK_PRICE_TABLE_NAME = os.environ.get("DB_STOCK_PRICE_TABLE")
 STOCK_LIST_TABLE_NAME = os.environ.get("DB_STOCK_TICKERS_TABLE")

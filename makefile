@@ -17,19 +17,19 @@ db-rm-volumes:
 # 	poetry run python ./data_downloader/db_cli.py create-server
 
 db-init-tables:
-	poetry run python ./data_downloader/db_cli.py init-tables
+	TICKERS_CSV__FILE="${PWD}/files/dev/sp500_stocks.csv" ENV_FILE_PATH="${PWD}/files/$(ENV)/.env" poetry run python ./data_downloader/db_cli.py init-tables
 
 db-populate-tickers-table:
-	poetry run python ./data_downloader/db_cli.py populate-tickers-table
+	TICKERS_CSV__FILE="${PWD}/files/dev/sp500_stocks.csv" ENV_FILE_PATH="${PWD}/files/$(ENV)/.env"  poetry run python ./data_downloader/db_cli.py populate-tickers-table
 
 db-delete-tables-content:
 	poetry run python ./data_downloader/db_cli.py delete-tables-content
 
 run-get-stock-data:
-	ENV_FILE_PATH="${PWD}/files/.env" poetry run python data_downloader/data_downloader.py get-stock-data $(ARGS)
+	ENV_FILE_PATH="${PWD}/files/$(ENV)/.env" poetry run python data_downloader/data_downloader.py get-stock-data $(ARGS)
 
 run-get-stocks-data:
-	ENV_FILE_PATH="${PWD}/files/.env" poetry run python data_downloader/data_downloader.py get-stocks-data $(ARGS)
+	ENV_FILE_PATH="${PWD}/files/$(ENV)/.env" poetry run python data_downloader/data_downloader.py get-stocks-data $(ARGS)
 
 docker-build-data-downloader:
 	docker build . -t data_downloader

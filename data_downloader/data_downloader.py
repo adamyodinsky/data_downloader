@@ -34,7 +34,7 @@ def cli(ctx, data_period: int = None, data_interval: str = None):
     logging.basicConfig(
         format="%(asctime)s,%(msecs)d %(levelname)-8s [%(filename)s:%(lineno)d] %(message)s",
         datefmt="%Y-%m-%d:%H:%M:%S",
-        level=logging.INFO,
+        level=logging[os.environ.get("LOG_LEVEL") or "INFO"],
     )
 
     # Give priority to cli inputs over env variables
