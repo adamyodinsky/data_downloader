@@ -1,0 +1,1 @@
+# TODO: write a config file, set all the global configuration here, to be imported everywhere.
