@@ -1,10 +1,12 @@
+import utils
 import os
+
+utils.load_env(os.environ.get("ENV_FILE_PATH"))
 
 # Logs
 log_level = os.environ.get("LOG_LEVEL") or "INFO"
 
 # Files path
-env_file_path = os.environ.get("ENV_FILE_PATH")
 tickers_csv_file = os.environ.get("TICKERS_CSV__FILE")
 
 # Downloader settings

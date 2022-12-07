@@ -1,8 +1,8 @@
+import config
 import datetime
 import logging
 
 import click
-import config
 import utils
 import yahoo
 from dateutil.relativedelta import relativedelta
@@ -28,18 +28,17 @@ from timescale import TmDB
 def cli(ctx, data_period: int = None, data_interval: str = None):
     ctx.ensure_object(dict)
     # Load env variables from .env file
-    utils.load_env(config.env_file_path)
     utils.check_env_vars()
 
     # Set logger configuration
     logging.basicConfig(
         format="%(asctime)s,%(msecs)d %(levelname)-8s [%(filename)s:%(lineno)d] %(message)s",
         datefmt="%Y-%m-%d:%H:%M:%S",
-        level=logging[config.log_level],
+        level=logging._nameToLevel[config.log_level],
     )
 
     # Give priority to cli inputs over env variables
-    ctx.obj["data_period"] = data_period or int(config.data_interval)
+    ctx.obj["data_period"] = data_period or int(config.data_period)
     ctx.obj["data_interval"] = data_interval or config.data_interval
     ctx.obj["current_date"] = datetime.date.today()
     ctx.obj["db"] = TmDB()
@@ -64,7 +63,7 @@ def cli(ctx, data_period: int = None, data_interval: str = None):
 )
 @click.pass_context
 def get_stocks_data(ctx, tickers: str = None, number_of_tickers: int = None):
-    # Give priority to cli inputs over env variables
+    # Priority to cli inputs over env variables, last priority is from a DB table
     number_of_tickers = number_of_tickers or int(config.number_of_tickers)
     tickers = tickers or config.tickers
 

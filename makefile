@@ -17,10 +17,10 @@ db-rm-volumes:
 # 	poetry run python ./data_downloader/db_cli.py create-server
 
 db-init-tables:
-	TICKERS_CSV__FILE="${PWD}/files/dev/sp500_stocks.csv" ENV_FILE_PATH="${PWD}/files/$(ENV)/.env" poetry run python ./data_downloader/db_cli.py init-tables
+	TICKERS_CSV__FILE="${PWD}/files/$(ENV)/sp500_stocks.csv" ENV_FILE_PATH="${PWD}/files/$(ENV)/.env" poetry run python ./data_downloader/db_cli.py init-tables
 
 db-populate-tickers-table:
-	TICKERS_CSV__FILE="${PWD}/files/dev/sp500_stocks.csv" ENV_FILE_PATH="${PWD}/files/$(ENV)/.env"  poetry run python ./data_downloader/db_cli.py populate-tickers-table
+	TICKERS_CSV__FILE="${PWD}/files/$(ENV)/sp500_stocks.csv" ENV_FILE_PATH="${PWD}/files/$(ENV)/.env"  poetry run python ./data_downloader/db_cli.py populate-tickers-table
 
 db-delete-tables-content:
 	poetry run python ./data_downloader/db_cli.py delete-tables-content

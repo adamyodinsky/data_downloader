@@ -9,6 +9,7 @@ def load_env(path: str):
 
 
 def check_env_vars():
+    missing_vars = []
     env_vars_list = [
         "DB_STOCK_TICKERS_TABLE",
         "DB_STOCK_PRICE_TABLE",
@@ -21,4 +22,7 @@ def check_env_vars():
 
     for var in env_vars_list:
         if os.getenv(var) is None:
-            raise RuntimeError(f"Environment variable {var} missing!")
+            missing_vars.append(var)
+
+    if len(missing_vars) > 0:
+        raise RuntimeError(f"Missing environment variables {missing_vars}")

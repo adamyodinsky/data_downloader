@@ -1,4 +1,5 @@
 import logging
+import config
 
 import psycopg2
 from io import StringIO
@@ -16,11 +17,11 @@ class TmDB(object):
 
     def __init__(self):
         with psycopg2.connect(
-            host=os.environ.get("POSTGRES_HOST"),
-            port=os.environ.get("POSTGRES_PORT"),
-            dbname=os.environ.get("POSTGRES_DB"),
-            user=os.environ.get("POSTGRES_USER"),
-            password=os.environ.get("POSTGRES_PASSWORD"),
+            host=config.postgres_host,
+            port=config.postgres_port,
+            dbname=config.postgres_db,
+            user=config.postgres_user,
+            password=config.postgres_password,
             connect_timeout=5,
         ) as conn:
             self.conn = conn
@@ -83,7 +84,7 @@ class TmDB(object):
         ":return: stocks ticker list from TimescaleDB
         """
 
-        query = f"SELECT ticker FROM {os.environ.get('DB_STOCK_TICKERS_TABLE')};"
+        query = f"SELECT ticker FROM {config.db_stock_tickers_table};"
         try:
             self.cursor.execute(query)
             response = self.cursor.fetchall()

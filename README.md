@@ -12,6 +12,7 @@
     - [1.3.4. scripts](#134-scripts)
   - [1.4. Makefile](#14-makefile)
   - [1.5. Environment Variables](#15-environment-variables)
+  - [Using The Data Downloader CLI](#using-the-data-downloader-cli)
   - [1.6. What's next?](#16-whats-next)
 
 A command line that can populate a timescaleDB database with historical price data of stocks.
@@ -121,6 +122,35 @@ A make-file that contains shortcuts for useful commands within the context of th
 - `POSTGRES_USER` *(required)* Postgres username.
 - `POSTGRES_PASSWORD` *(required)* Postgres password.
 
+**Note: Command line inputs override env variable values.**
+
+## Using The Data Downloader CLI
+
+`make run-get-stocks-data ENV=<env_folder> ARGS=<args>`
+
+```txt
+Download historical price data for a list of stocks.
+
+Arguments:
+  -n, --number-of-tickers INTEGER (optional)
+                                  Number of tickers to iterate over.
+  -t, --tickers TEXT  (optional)  List of tickers to iterate over, separated
+                                  with whitespace. 
+  --help                          Show this message and exit.
+```
+
+`make run-get-stock-data ENV=<env_folder> ARGS=<args>`
+
+```txt
+Download a specific stock historical price data
+
+Arguments:
+  -t, --ticker TEXT  (required)   A single stock ticker 
+      --help                      Show this message and exit.
+```
+
+**Note: Command line inputs override env variable values.**
+
 ## 1.6. What's next?
 
-- Handle data about the finances and fundamentals of the companies.
+- Download data about the finances and fundamentals of the companies.
