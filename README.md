@@ -67,7 +67,7 @@ Arguments:
   -n, --number-of-tickers INTEGER (optional)
                                   Number of tickers to iterate over.
   -t, --tickers TEXT  (optional)  List of tickers to iterate over, separated
-                                  with whitespace. 
+                                  with whitespace. this flag replace the tickers database table functionality.
   --help                          Show this message and exit.
 ```
 
