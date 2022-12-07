@@ -16,7 +16,8 @@ def check_env_vars():
         "POSTGRES_HOST",
         "POSTGRES_PORT",
         "POSTGRES_USER",
-        "POSTGRES_PASSWORD"]
+        "POSTGRES_PASSWORD",
+    ]
 
     for var in env_vars_list:
         if os.getenv(var) is None:

@@ -44,7 +44,7 @@ run-data-downloader-container-deatched:
 	docker run -d data_downloader
 
 format:
-	poetry run black . 
+	poetry run black .
 
 setup:
-	poetry config virtualenvs.in-project true && poetry install
+	poetry env use 3.10 && poetry install

@@ -1,11 +1,12 @@
-from timescale import TmDB
-import yahoo
-import utils
 import datetime
 import logging
-import os
+
 import click
+import config
+import utils
+import yahoo
 from dateutil.relativedelta import relativedelta
+from timescale import TmDB
 
 
 @click.group()
@@ -27,19 +28,19 @@ from dateutil.relativedelta import relativedelta
 def cli(ctx, data_period: int = None, data_interval: str = None):
     ctx.ensure_object(dict)
     # Load env variables from .env file
-    utils.load_env(os.environ.get("ENV_FILE_PATH"))
+    utils.load_env(config.env_file_path)
     utils.check_env_vars()
 
     # Set logger configuration
     logging.basicConfig(
         format="%(asctime)s,%(msecs)d %(levelname)-8s [%(filename)s:%(lineno)d] %(message)s",
         datefmt="%Y-%m-%d:%H:%M:%S",
-        level=logging[os.environ.get("LOG_LEVEL") or "INFO"],
+        level=logging[config.log_level],
     )
 
     # Give priority to cli inputs over env variables
-    ctx.obj["data_period"] = data_period or int(os.environ.get("DATA_PERIOD"))
-    ctx.obj["data_interval"] = data_interval or os.environ.get("DATA_INTERVAL")
+    ctx.obj["data_period"] = data_period or int(config.data_interval)
+    ctx.obj["data_interval"] = data_interval or config.data_interval
     ctx.obj["current_date"] = datetime.date.today()
     ctx.obj["db"] = TmDB()
 
@@ -64,8 +65,8 @@ def cli(ctx, data_period: int = None, data_interval: str = None):
 @click.pass_context
 def get_stocks_data(ctx, tickers: str = None, number_of_tickers: int = None):
     # Give priority to cli inputs over env variables
-    number_of_tickers = number_of_tickers or int(os.environ.get("NUMBER_OF_TICKERS"))
-    tickers = tickers or (os.environ.get("TICKERS"))
+    number_of_tickers = number_of_tickers or int(config.number_of_tickers)
+    tickers = tickers or config.tickers
 
     # If there is a tickers string from the cli input or from env variable, split it to a list
     # Else, get and map a list from the DB tickers table.
@@ -120,7 +121,7 @@ def _get_stock_data(
             interval=data_interval,
         )
         logging.info(f"Uploading {ticker} data to DB.")
-        db.upsert_data(df=ticker_data, table=os.environ.get("DB_STOCK_PRICE_TABLE"))
+        db.upsert_data(df=ticker_data, table=config.db_stock_price_table)
     else:
         logging.info(f"{ticker} Is up to date, no action needed.")
 
@@ -135,11 +136,9 @@ def _get_starting_date(db: TmDB, ticker: str, data_period: str, current_date):
 
     start = None
     first_data_point_date = db.get_first(
-        table=os.environ.get("DB_STOCK_PRICE_TABLE"), ticker=ticker
+        table=config.db_stock_price_table, ticker=ticker
     )
-    last_data_point_date = db.get_last(
-        table=os.environ.get("DB_STOCK_PRICE_TABLE"), ticker=ticker
-    )
+    last_data_point_date = db.get_last(table=config.db_stock_price_table, ticker=ticker)
     period_date = (
         current_date - relativedelta(years=data_period) + relativedelta(weeks=1)
     )

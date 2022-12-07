@@ -29,7 +29,6 @@ The project uses [the Yahoo API python package](https://pypi.org/project/yfinanc
 
 Get to know and install the next tools:
 
-- [pyenv](https://github.com/pyenv/pyenv#installation)
 - [poetry](https://python-poetry.org/docs/#installation) (use the link to install, do not use brew)
 - [docker](https://docs.docker.com/get-docker/)
 - [docker-compose](https://docs.docker.com/compose/install/)
