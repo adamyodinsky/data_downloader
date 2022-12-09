@@ -28,7 +28,7 @@ from timescale import TmDB
 def cli(ctx, data_period: int = None, data_interval: str = None):
     ctx.ensure_object(dict)
     # Load env variables from .env file
-    utils.check_env_vars()
+    # utils.check_env_vars()
 
     # Set logger configuration
     logging.basicConfig(
@@ -38,7 +38,7 @@ def cli(ctx, data_period: int = None, data_interval: str = None):
     )
 
     # Give priority to cli inputs over env variables
-    ctx.obj["data_period"] = data_period or int(config.data_period)
+    ctx.obj["data_period"] = data_period or config.data_period
     ctx.obj["data_interval"] = data_interval or config.data_interval
     ctx.obj["current_date"] = datetime.date.today()
     ctx.obj["db"] = TmDB()

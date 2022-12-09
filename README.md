@@ -43,16 +43,17 @@ To start developing locally you will need to:
 1. Install the [dependencies](#121-dependencies).
 2. Start your timescaleDB engines ON.
    1. `make db-up` Spin up a timescaleDB via docker-compose. you can see the running containers with "docker ps" command.
-   2. Open the browser at http://localhost:9000 for the PGAdmin UI.
-   3. Connect with `my@email.com` and `password`
-   4. Click `Add new server`.
-      1. On the first page name=`postgres`.
-      2. On `connection` page host=`timescale` username=`postgres` pass=`1234`.
-   5. Click `Save`.
-   6. `make db-init-tables` Create tables and indices.
-   7. `make db-populate-tickers-table` Populate the [stocks list table](#11-glossary).
-3. `make setup` to install python libraries in the poetry virtual environment.
-4. [Run the data downloader](#13-using-the-data-downloader-cli)
+3. Create a new server
+   1. Open the browser at http://localhost:9000 for the PGAdmin UI.
+   2. Connect with `my@email.com` and `password`
+   3. Click `Add new server`.
+      1. On the first page name=`stocks_data`.
+      2. On `connection` page host=`timescale` username=`admin` pass=`1234`.
+   4. Click `Save`.
+4. `make db-init` Create Server, tables, index them, and updates the sp500 tickers table.
+5. `make db-populate-tickers-table` Populate the [stocks list table](#11-glossary).
+6. `make setup` to install python libraries in the poetry virtual environment.
+7. [Run the data downloader](#13-using-the-data-downloader-cli)
 
 
 
@@ -96,8 +97,8 @@ Arguments:
 
 [data_downloader](./data_downloader/) The python source code folder that populates an SQL database with data about stocks.
 
-- [`db_vars.py`](./data_downloader/db_vars.py) Contains commands for creating tables, creating indices, and populating the "tickers" table. used by `db_cli.py`.
-- [`db_cli.py`](./data_downloader/db_cli.py) Is a command line tool for DB administration.
+- [`db_vars.py`](./data_downloader/db_vars.py) Contains commands for creating tables, creating indices, and populating the "tickers" table. used by `utils_cli.py`.
+- [`utils_cli.py`](./data_downloader/utils_cli.py) Is a command line tool for DB administration.
 - [`helpers.py`](./data_downloader/helper.py) contains helpers functions, which can be also called "utils", right now containing only a "load_config" function.
 - [`timescale.py`](./data_downloader/timescale.py) A file that contains a class that encapsulates all the functionality for interacting with our timescaleDB.
 - [`yahoo.py`](./data_downloader/yahoo.py) A file with all the functions needed for interacting with yahoo API for getting data about stocks.
@@ -124,7 +125,7 @@ A make-file that contains shortcuts for useful commands within the context of th
 - `db-down` Remove the database containers and networks using docker-compose.
 - `db-stop` Stop the database containers using docker-compose.
 - `db-rm-volumes` Remove the database containers, networks, and volumes using docker-compose.
-- `db-init-tables` Create tables and indices.
+- `db-init` Create Server, tables, index them, and updates the sp500 tickers table.
 - `db-populate-tickers-table` Populate the [stocks list table](#11-glossary).
 - `db-delete-tables-content` Delete all table's content.
 - `make run-get-stock-data ARGS=<args>` Run data_downloader cli to download specific stock data, use "ARGS=--help" to see all available options.

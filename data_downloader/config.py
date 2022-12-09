@@ -6,9 +6,6 @@ utils.load_env(os.environ.get("ENV_FILE_PATH"))
 # Logs
 log_level = os.environ.get("LOG_LEVEL") or "INFO"
 
-# Files path
-tickers_csv_file = os.environ.get("TICKERS_CSV__FILE")
-
 # Downloader settings
 data_period = (
     int(os.environ.get("DATA_PERIOD")) if os.environ.get("DATA_PERIOD") else None
@@ -23,13 +20,13 @@ number_of_tickers = (
     else 5
 )
 
-# Table names
-db_stock_price_table = os.environ.get("DB_STOCK_PRICE_TABLE")
-db_stock_tickers_table = os.environ.get("DB_STOCK_TICKERS_TABLE")
+# DB Table names
+db_stock_price_table = os.environ.get("DB_STOCK_PRICE_TABLE") or "stock_price"
+db_sp500_tickers_table = os.environ.get("DB_STOCK_TICKERS_TABLE") or "sp500_tickers"
 
 # Postgres configuration
-postgres_host = os.environ.get("POSTGRES_HOST")
-postgres_port = os.environ.get("POSTGRES_PORT")
-postgres_db = os.environ.get("POSTGRES_DB")
-postgres_user = os.environ.get("POSTGRES_USER")
-postgres_password = os.environ.get("POSTGRES_PASSWORD")
+postgres_dbname = os.environ.get("POSTGRES_DB") or "stocks_data"
+postgres_host = os.environ.get("POSTGRES_HOST") or "localhost"
+postgres_port = os.environ.get("POSTGRES_PORT") or "5432"
+postgres_username = os.environ.get("POSTGRES_USER") or "admin"
+postgres_password = os.environ.get("POSTGRES_PASSWORD") or "1234"

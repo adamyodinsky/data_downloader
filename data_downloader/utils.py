@@ -8,21 +8,13 @@ def load_env(path: str):
     load_dotenv(dotenv_path=dotenv_path)
 
 
-def check_env_vars():
-    missing_vars = []
-    env_vars_list = [
-        "DB_STOCK_TICKERS_TABLE",
-        "DB_STOCK_PRICE_TABLE",
-        "POSTGRES_DB",
-        "POSTGRES_HOST",
-        "POSTGRES_PORT",
-        "POSTGRES_USER",
-        "POSTGRES_PASSWORD",
-    ]
+# def check_env_vars():
+#     missing_vars = []
+#     env_vars_list = []
 
-    for var in env_vars_list:
-        if os.getenv(var) is None:
-            missing_vars.append(var)
+#     for var in env_vars_list:
+#         if os.getenv(var) is None:
+#             missing_vars.append(var)
 
-    if len(missing_vars) > 0:
-        raise RuntimeError(f"Missing environment variables {missing_vars}")
+#     if len(missing_vars) > 0:
+#         raise RuntimeError(f"Missing environment variables {missing_vars}")

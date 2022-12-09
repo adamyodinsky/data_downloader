@@ -19,8 +19,8 @@ class TmDB(object):
         with psycopg2.connect(
             host=config.postgres_host,
             port=config.postgres_port,
-            dbname=config.postgres_db,
-            user=config.postgres_user,
+            dbname=config.postgres_dbname,
+            user=config.postgres_username,
             password=config.postgres_password,
             connect_timeout=5,
         ) as conn:
@@ -54,7 +54,6 @@ class TmDB(object):
         logging.debug(f"DataFrame uploaded to TimescaleDB {table} successfully")
 
     def upsert_data(self, df, table):
-
         # Create a list of tuples from the dataframe values
         tuples = [tuple(x) for x in df.to_numpy()]
         # Comma-separated dataframe columns
@@ -66,8 +65,6 @@ class TmDB(object):
             table,
             columns,
         )
-        # print(query)
-
         try:
             extras.execute_values(self.cursor, query, tuples)
             self.conn.commit()
@@ -84,7 +81,7 @@ class TmDB(object):
         ":return: stocks ticker list from TimescaleDB
         """
 
-        query = f"SELECT ticker FROM {config.db_stock_tickers_table};"
+        query = f"SELECT ticker FROM {config.db_sp500_tickers_table};"
         try:
             self.cursor.execute(query)
             response = self.cursor.fetchall()
