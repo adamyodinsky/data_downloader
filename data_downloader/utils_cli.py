@@ -52,6 +52,11 @@ def init(ctx):
         ctx.obj["db"],
     )
     execute_db_command(
+        db_vars.create_gdp_table_message,
+        db_vars.create_gdp_table_query,
+        ctx.obj["db"],
+    )
+    execute_db_command(
         db_vars.index_sp500_tickers_table_message,
         db_vars.index_sp500_tickers_table_query,
         ctx.obj["db"],
@@ -59,6 +64,11 @@ def init(ctx):
     execute_db_command(
         db_vars.index_stock_price_table_message,
         db_vars.index_stock_price_table_query,
+        ctx.obj["db"],
+    )
+    execute_db_command(
+        db_vars.index_gdp_table_message,
+        db_vars.index_gdp_table_query,
         ctx.obj["db"],
     )
     execute_db_command(

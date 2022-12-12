@@ -7,6 +7,7 @@ utils.load_env(os.environ.get("ENV_FILE_PATH"))
 log_level = os.environ.get("LOG_LEVEL") or "INFO"
 
 # Downloader settings
+fred_token = os.environ.get("FRED_TOKEN")
 data_period = (
     int(os.environ.get("DATA_PERIOD")) if os.environ.get("DATA_PERIOD") else None
 )
@@ -23,6 +24,7 @@ number_of_tickers = (
 # DB Table names
 db_stock_price_table = os.environ.get("DB_STOCK_PRICE_TABLE") or "stock_price"
 db_sp500_tickers_table = os.environ.get("DB_STOCK_TICKERS_TABLE") or "sp500_tickers"
+gdp_table = os.environ.get("GDP_TABLE_NAME") or "gdp"
 
 # Postgres configuration
 postgres_dbname = os.environ.get("POSTGRES_DB") or "stocks_data"

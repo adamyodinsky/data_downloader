@@ -13,7 +13,9 @@
     - [1.4.4. scripts](#144-scripts)
   - [1.5. Makefile](#15-makefile)
   - [1.6. Environment Variables](#16-environment-variables)
-  - [1.7. What's next?](#17-whats-next)
+  - [1.7. External APIs](#17-external-apis)
+  - [1.8. What's next?](#18-whats-next)
+
 
 
 A command line tool that can populate a timescaleDB database with historical price data of stocks.
@@ -101,7 +103,7 @@ Arguments:
 - [`utils_cli.py`](./data_downloader/utils_cli.py) Is a command line tool for DB administration.
 - [`helpers.py`](./data_downloader/helper.py) contains helpers functions, which can be also called "utils", right now containing only a "load_config" function.
 - [`timescale.py`](./data_downloader/timescale.py) A file that contains a class that encapsulates all the functionality for interacting with our timescaleDB.
-- [`yahoo.py`](./data_downloader/yahoo.py) A file with all the functions needed for interacting with yahoo API for getting data about stocks.
+- [`data_provider.py`](./data_downloader/data_provider.py) A file with all the functions needed for interacting with yahoo API for getting data about stocks.
 - [`data_downloader.py`](./data_downloader/main.py) The entry-point for a command line tool that downloads stocks' data from yahoo.
 
 Under [`data_downloader/files`](./data_downloader//files/) you can find CSV files that contain the data needed for the initial population of the ["stocks list table"](#11-glossary), and a `.env` file for local development.
@@ -155,6 +157,12 @@ A make-file that contains shortcuts for useful commands within the context of th
 
 **Note: Command line inputs override env variable values.**
 
-## 1.7. What's next?
+## 1.7. External APIs
+
+- https://github.com/mortada/fredapi
+- https://github.com/ranaroussi/yfinance
+
+
+## 1.8. What's next?
 
 - Download data about the finances and fundamentals of the companies.

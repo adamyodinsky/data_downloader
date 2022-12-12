@@ -37,6 +37,17 @@ create_stock_price_table_query = f"""
     );
     """
 
+# Create tickers list table
+create_gdp_table_message = (
+    f"Created {config.gdp_table} table successfully"
+)
+create_gdp_table_query = f"""
+    CREATE TABLE IF NOT EXISTS {config.gdp_table} (
+        date DATE,
+        value FLOAT
+    );
+    """
+
 # index tables
 index_sp500_tickers_table_message = (
     f"Indexed the table {config.db_sp500_tickers_table}."
@@ -48,6 +59,13 @@ index_sp500_tickers_table_query = (
 index_stock_price_table_message = f"Indexed the table {config.db_stock_price_table}."
 index_stock_price_table_query = (
     f"CREATE INDEX ON {config.db_stock_price_table} (ticker, date DESC);"
+)
+
+index_gdp_table_message = (
+    f"Indexed the table {config.gdp_table}."
+)
+index_gdp_table_query = (
+    f"CREATE INDEX ON {config.gdp_table} (date DESC);"
 )
 
 # convert table to a time series table (postgres timescaledb feature)
@@ -67,7 +85,13 @@ delete_sp500_tickers_content_query = f"DELETE FROM {config.db_sp500_tickers_tabl
 delete_sp500_tickers_content_message = (
     f"Deleted the content from {config.db_sp500_tickers_table} table."
 )
-# TODO this is not working
+delete_gdp_content_query = f"DELETE FROM {config.gdp_table}"
+delete_gdp_content_message = (
+    f"Deleted the content from {config.gdp_table} table."
+)
+
+
+# TODO create_server_query is not working yet
 
 postgres_fdw_extension_query = "CREATE EXTENSION IF NOT EXISTS postgres_fdw";
 

@@ -26,11 +26,14 @@ db-update-sp500-tickers-table:
 db-delete-tables-content:
 	ENV_FILE_PATH=${ENV_FILE_PATH} poetry run python ./data_downloader/utils_cli.py delete-tables-content
 
+run-get-stocks-data:
+	ENV_FILE_PATH=${ENV_FILE_PATH} poetry run python data_downloader/data_downloader.py get-stocks-data $(ARGS)
+
 run-get-stock-data:
 	ENV_FILE_PATH=${ENV_FILE_PATH} poetry run python data_downloader/data_downloader.py get-stock-data $(ARGS)
 
-run-get-stocks-data:
-	ENV_FILE_PATH=${ENV_FILE_PATH} poetry run python data_downloader/data_downloader.py get-stocks-data $(ARGS)
+run-get-macros-data:
+	ENV_FILE_PATH=${ENV_FILE_PATH} poetry run python data_downloader/data_downloader.py get-macros-data $(ARGS)
 
 docker-build-data-downloader:
 	docker build . -t data_downloader

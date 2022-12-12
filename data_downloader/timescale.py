@@ -4,16 +4,16 @@ import config
 import psycopg2
 from io import StringIO
 import psycopg2.extras as extras
-import os
+import pandas as pd
 
 
 class TmDB(object):
     """A singleton class that encapsulates all the functionality for interacting with timescaleDB"""
 
-    # def __new__(cls):
-    #     if not hasattr(cls, "instance"):
-    #         cls.instance = super(TmDB, cls).__new__(cls)
-    #     return cls.instance
+    def __new__(cls):
+        if not hasattr(cls, "instance"):
+            cls.instance = super(TmDB, cls).__new__(cls)
+        return cls.instance
 
     def __init__(self):
         with psycopg2.connect(
@@ -53,7 +53,7 @@ class TmDB(object):
         self.conn.commit()
         logging.debug(f"DataFrame uploaded to TimescaleDB {table} successfully")
 
-    def upsert_data(self, df, table):
+    def upsert_data(self, df: pd.core.frame.DataFrame, table: str):
         # Create a list of tuples from the dataframe values
         tuples = [tuple(x) for x in df.to_numpy()]
         # Comma-separated dataframe columns
@@ -95,7 +95,7 @@ class TmDB(object):
 
         return response
 
-    def truncate(self, table_name):
+    def truncate(self, table_name: str):
         self.cursor.execute(f"TRUNCATE {table_name}")
         self.conn.commit()
 
@@ -118,7 +118,7 @@ class TmDB(object):
             return 1
         return response
 
-    def get_first(self, table, ticker):
+    def get_first(self, table: str, ticker: str):
         query = f"""
         SELECT ticker, date
         FROM {table}

@@ -1,12 +1,61 @@
 import config
 import datetime
 import logging
-
+import pandas as pd
 import click
-import utils
-import yahoo
+import sqlalchemy
+from data_provider import DataProvider
 from dateutil.relativedelta import relativedelta
 from timescale import TmDB
+
+
+def _get_stock_data(
+    current_date, data_interval: str, data_period: int, ticker: str, db: TmDB, dp: DataProvider
+):
+    start = _get_starting_date(db, ticker, data_period, current_date)
+
+    # Download stock data and save into DB
+    if start != current_date:  # prevent an unneeded API calls
+        ticker_data = dp.download_prices(
+            ticker=ticker,
+            start=start,
+            end=current_date,
+            interval=data_interval,
+        )
+        logging.info(f"Uploading {ticker} data to DB.")
+        db.upsert_data(df=ticker_data, table=config.db_stock_price_table)
+    else:
+        logging.info(f"{ticker} Is up to date, no action needed.")
+
+    logging.info("Data updated successfully.")
+
+
+def _get_starting_date(db: TmDB, ticker: str, data_period: str, current_date):
+    """Get the first date from where we want the data series we downloading will begin from.
+    If there is no data at all, it will download the data by the DATA_PERIOD env variable.
+    If there is data, but there is a new data that should be downloaded, or the data_period is going further back from our oldest data_point, the missing data will be downloaded and added to the existing data.
+    """
+
+    start = None
+    first_data_point_date = db.get_first(
+        table=config.db_stock_price_table, ticker=ticker
+    )
+    last_data_point_date = db.get_last(table=config.db_stock_price_table, ticker=ticker)
+    period_date = (
+        current_date - relativedelta(years=data_period) + relativedelta(weeks=1)
+    )
+
+    # if period go further in the past compared to the oldest record, use period
+    # else, use the last data-point date as a starting point which is the most fresh data point.
+    if last_data_point_date is not None:
+        if period_date < first_data_point_date[1]:
+            start = period_date
+        else:
+            start = last_data_point_date[1]
+    else:
+        start = period_date
+
+    return start
 
 
 @click.group()
@@ -42,6 +91,7 @@ def cli(ctx, data_period: int = None, data_interval: str = None):
     ctx.obj["data_interval"] = data_interval or config.data_interval
     ctx.obj["current_date"] = datetime.date.today()
     ctx.obj["db"] = TmDB()
+    ctx.obj["dp"] = DataProvider()
 
     return ctx
 
@@ -88,6 +138,7 @@ def get_stocks_data(ctx, tickers: str = None, number_of_tickers: int = None):
             data_interval=ctx.obj["data_interval"],
             current_date=ctx.obj["current_date"],
             db=ctx.obj["db"],
+            dp=ctx.obj["dp"],
         )
 
     logging.info("Stocks data updated successfully.")
@@ -103,59 +154,34 @@ def get_stock_data(ctx: click.Context, ticker: str):
         data_interval=ctx.obj["data_interval"],
         current_date=ctx.obj["current_date"],
         db=ctx.obj["db"],
+        dp=ctx.obj["dp"],
     )
 
 
-def _get_stock_data(
-    current_date, data_interval: str, data_period: int, ticker: str, db: TmDB
-):
-    start = _get_starting_date(db, ticker, data_period, current_date)
+@click.command(help=f"Download GDP historical data")
+@click.pass_context
+def get_macros_data(ctx):
+    logging.info(f"Downloading macro-economics data.")
 
-    # Download stock data and save into DB
-    if start != current_date:  # prevent an unneeded API calls
-        ticker_data = yahoo.download_prices(
-            ticker=ticker,
-            start=start,
-            end=current_date,
-            interval=data_interval,
-        )
-        logging.info(f"Uploading {ticker} data to DB.")
-        db.upsert_data(df=ticker_data, table=config.db_stock_price_table)
-    else:
-        logging.info(f"{ticker} Is up to date, no action needed.")
+    gdp_df = ctx.obj['dp'].get_gdp_data()
+    gdp_df = gdp_df.reset_index(name='value').rename(columns={'index': 'date'})
 
-    logging.info("Data updated successfully.")
+    # Convert the 'date' column to a datetime column
+    # gdp_df['date'] = pd.to_datetime(gdp_df['date'])
 
+    # Convert the datetime objects in the 'date' column to strings in the format '%Y-%m-%d'
+    # gdp_df['date'] = gdp_df['date'].dt.strftime('%Y-%m-%d')
 
-def _get_starting_date(db: TmDB, ticker: str, data_period: str, current_date):
-    """Get the first date from where we want the data series we downloading will begin from.
-    If there is no data at all, it will download the data by the DATA_PERIOD env variable.
-    If there is data, but there is a new data that should be downloaded, or the data_period is going further back from our oldest data_point, the missing data will be downloaded and added to the existing data.
-    """
-
-    start = None
-    first_data_point_date = db.get_first(
-        table=config.db_stock_price_table, ticker=ticker
-    )
-    last_data_point_date = db.get_last(table=config.db_stock_price_table, ticker=ticker)
-    period_date = (
-        current_date - relativedelta(years=data_period) + relativedelta(weeks=1)
-    )
-
-    # if period go further in the past compared to the oldest record, use period
-    # else, use the last data-point date as a starting point which is the most fresh data point.
-    if last_data_point_date is not None:
-        if period_date < first_data_point_date[1]:
-            start = period_date
-        else:
-            start = last_data_point_date[1]
-    else:
-        start = period_date
-
-    return start
+    # insert the data into the table "mytable"
+    # gdp_df.to_sql(config.gdp_table, ctx.obj['db'].conn, if_exists='replace', index=False,
+    #       dtype={'date': sqlalchemy.types.Date(), 'value': sqlalchemy.types.Float()})
+    
+    ctx.obj['db'].upsert_data(gdp_df, config.gdp_table)
+    logging.info("Macro-economics data updated successfully.")
 
 
 cli.add_command(get_stocks_data)
 cli.add_command(get_stock_data)
+cli.add_command(get_macros_data)
 
 cli()
