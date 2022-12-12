@@ -20,64 +20,27 @@ def cli(ctx):
     ctx.ensure_object(dict)
     ctx.obj["db"] = TmDB()
 
-
+# TODO: need to refactor this pronto, it's horrible
 @click.command(
     help=f"Create and index {config.db_stock_price_table} and {config.db_sp500_tickers_table} tables"
 )
 @click.pass_context
 def init(ctx):
-    execute_db_command(
-        "Postgres_fdw extension query completed successfully",
-        db_vars.postgres_fdw_extension_query,
-        ctx.obj["db"],
-    )
-    execute_db_command(
-        db_vars.create_server_message,
-        db_vars.create_server_query,
-        ctx.obj["db"],
-    )
-    execute_db_command(
-        "User granted permission successfully",
-        f"GRANT USAGE ON FOREIGN SERVER {config.postgres_dbname} TO {config.postgres_username};",
-        ctx.obj["db"],
-    )
-    execute_db_command(
-        db_vars.create_sp500_tickers_table_message,
-        db_vars.create_sp500_tickers_table_query,
-        ctx.obj["db"],
-    )
-    execute_db_command(
-        db_vars.create_stock_price_table_message,
-        db_vars.create_stock_price_table_query,
-        ctx.obj["db"],
-    )
-    execute_db_command(
-        db_vars.create_gdp_table_message,
-        db_vars.create_gdp_table_query,
-        ctx.obj["db"],
-    )
-    execute_db_command(
-        db_vars.index_sp500_tickers_table_message,
-        db_vars.index_sp500_tickers_table_query,
-        ctx.obj["db"],
-    )
-    execute_db_command(
-        db_vars.index_stock_price_table_message,
-        db_vars.index_stock_price_table_query,
-        ctx.obj["db"],
-    )
-    execute_db_command(
-        db_vars.index_gdp_table_message,
-        db_vars.index_gdp_table_query,
-        ctx.obj["db"],
-    )
-    execute_db_command(
-        db_vars.create_stock_price_hypertable_message,
-        db_vars.create_stock_price_hypertable_query,
-        ctx.obj["db"],
-    )
+    for query in db_vars.queries["create"].values():
+        execute_db_command(
+            query["message"],
+            query["query"],
+            ctx.obj["db"]
+        ) 
+    
+    for query in db_vars.queries["index"].values():
+        execute_db_command(
+            query["message"],
+            query["query"],
+            ctx.obj["db"]
+        )
+        
     _update_sp500_tickers_table(ctx.obj["db"])
-
 
 
 @click.command(help="Delete tables content")
@@ -91,6 +54,11 @@ def delete_tables_content(ctx):
     execute_db_command(
         db_vars.delete_sp500_tickers_content_message,
         db_vars.delete_sp500_tickers_content_query,
+        ctx.obj["db"],
+    )
+    execute_db_command(
+        db_vars.delete_macro_content_message,
+        db_vars.delete_macro_content_query,
         ctx.obj["db"],
     )
 

@@ -1,11 +1,15 @@
-import yfinance as yf
-from fredapi import Fred
 import datetime
 import logging
+
 import config
+import pandas as pd
+import yfinance as yf
+from fred_extension import FredExtension as Fred
 
 
 class DataProvider(object):
+    REAL_TIME_MAX_DATE = '9999-12-31'
+
     def __init__(self):
         self.fred = Fred(api_key=config.fred_token)
 
@@ -53,4 +57,50 @@ class DataProvider(object):
 
     def get_gdp_data(self):
         df = self.fred.get_series_first_release('GDP')
+        df = df.reset_index(name="value").rename(columns={"index": "date"})
+        df['type'] = 'GDP'
         return df
+
+    def get_unemployment_data(self):
+        df = self.fred.get_series_first_release('UNRATE')
+        df = df.reset_index(name="value").rename(columns={"index": "date"})
+        df['type'] = 'UNRATE'
+        return df
+
+    def get_inflation_data(self):
+        df = self.fred.get_series_first_release('CPIAUCSL')
+        df = df.reset_index(name="value").rename(columns={"index": "date"})
+        df['type'] = 'CPIAUCSL'
+        return df
+
+
+    def get_consumer_sentiment_data(self):
+        df = self.fred.get_series_first_release('UMCSENT')
+        df = df.reset_index(name="value").rename(columns={"index": "date"})
+        df['type'] = 'UMCSENT'
+
+        # Replace NaT values with nulls
+        df = df.where(pd.notnull(df), None)
+
+        return df
+
+
+    def get_interest_rate_data(self):
+        start = '2020-01-01'
+        end = self.REAL_TIME_MAX_DATE
+
+        df = self.fred.get_series_first_release_by_dates('DFF', realtime_start=start, realtime_end=end)
+        df = df.reset_index(name="value").rename(columns={"index": "date"})
+        df['type'] = 'DFF'
+        return df
+    
+    # def get_interest_rate_data(self):
+    #     url = f"https://api.stlouisfed.org/fred/series/observations?series_id=DFF&api_key={config.fred_token}&file_type=json"
+    #     response = requests.get(url)
+    #     data = response.json()
+    #     df = pd.DataFrame(data["observations"])
+    #     df["date"] = pd.to_datetime(df["date"])
+    #     df = df.set_index("date")
+    #     df = df.drop(columns=["realtime_start", "realtime_end"])
+    #     df = df.rename(columns={"value": "interest_rate"})
+    #     return df

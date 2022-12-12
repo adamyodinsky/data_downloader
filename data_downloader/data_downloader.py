@@ -9,7 +9,12 @@ from timescale import TmDB
 
 
 def _get_stock_data(
-    current_date, data_interval: str, data_period: int, ticker: str, db: TmDB, dp: DataProvider
+    current_date,
+    data_interval: str,
+    data_period: int,
+    ticker: str,
+    db: TmDB,
+    dp: DataProvider,
 ):
     start = _get_starting_date(db, ticker, data_period, current_date)
 
@@ -157,16 +162,34 @@ def get_stock_data(ctx: click.Context, ticker: str):
     )
 
 
-@click.command(help=f"Download GDP historical data")
+@click.command(help=f"Download Macro Economics historical data")
 @click.pass_context
 def get_macros_data(ctx):
-    logging.info(f"Downloading macro-economics data.")
+    """Download macro-economics data and save into the DB"""
 
-    gdp_df = ctx.obj['dp'].get_gdp_data()
-    gdp_df = gdp_df.reset_index(name='value').rename(columns={'index': 'date'})
+    dp: DataProvider = ctx.obj["dp"]
+    db: TmDB = ctx.obj["db"]
 
-    ctx.obj['db'].upsert_data(gdp_df, config.gdp_table)
-    logging.info("Macro-economics data updated successfully.")
+    gdp_df = dp.get_gdp_data()
+    db.upsert_data(gdp_df, config.macro_table)
+    logging.info("GDP data updated successfully.")
+
+    unemployment_df = dp.get_unemployment_data()
+    db.upsert_data(unemployment_df, config.macro_table)
+    logging.info("Unemployment data updated successfully.")
+
+    inflation_df = dp.get_inflation_data()
+    db.upsert_data(inflation_df, config.macro_table)
+    logging.info("Inflation data updated successfully.")
+
+    consumer_sentiment_df = dp.get_consumer_sentiment_data()
+    db.upsert_data(consumer_sentiment_df, config.macro_table)
+    logging.info("Consumer sentiment data updated successfully.")
+
+    interest_rate_df = dp.get_interest_rate_data()
+    db.upsert_data(interest_rate_df, config.macro_table)
+    logging.info("Interest rate data updated successfully.")
+
 
 
 cli.add_command(get_stocks_data)

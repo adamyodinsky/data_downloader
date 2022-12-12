@@ -24,7 +24,7 @@ number_of_tickers = (
 # DB Table names
 db_stock_price_table = os.environ.get("DB_STOCK_PRICE_TABLE") or "stock_price"
 db_sp500_tickers_table = os.environ.get("DB_STOCK_TICKERS_TABLE") or "sp500_tickers"
-gdp_table = os.environ.get("GDP_TABLE_NAME") or "gdp"
+macro_table = os.environ.get("MACRO_TABLE_NAME") or "macros"
 
 # Postgres configuration
 postgres_dbname = os.environ.get("POSTGRES_DB") or "stocks_data"
