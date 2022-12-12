@@ -14,55 +14,6 @@ def execute_db_command(message: str, command: str, db: TmDB):
     print(message)
 
 
-@click.group()
-@click.pass_context
-def cli(ctx):
-    ctx.ensure_object(dict)
-    ctx.obj["db"] = TmDB()
-
-# TODO: need to refactor this pronto, it's horrible
-@click.command(
-    help=f"Create and index {config.db_stock_price_table} and {config.db_sp500_tickers_table} tables"
-)
-@click.pass_context
-def init(ctx):
-    for query in db_vars.queries["create"].values():
-        execute_db_command(
-            query["message"],
-            query["query"],
-            ctx.obj["db"]
-        ) 
-    
-    for query in db_vars.queries["index"].values():
-        execute_db_command(
-            query["message"],
-            query["query"],
-            ctx.obj["db"]
-        )
-        
-    _update_sp500_tickers_table(ctx.obj["db"])
-
-
-@click.command(help="Delete tables content")
-@click.pass_context
-def delete_tables_content(ctx):
-    execute_db_command(
-        db_vars.delete_stock_price_content_message,
-        db_vars.delete_stock_price_content_query,
-        ctx.obj["db"],
-    )
-    execute_db_command(
-        db_vars.delete_sp500_tickers_content_message,
-        db_vars.delete_sp500_tickers_content_query,
-        ctx.obj["db"],
-    )
-    execute_db_command(
-        db_vars.delete_macro_content_message,
-        db_vars.delete_macro_content_query,
-        ctx.obj["db"],
-    )
-
-
 def _update_sp500_tickers_table(db: TmDB):
     url = "https://www.slickcharts.com/sp500"
     request = requests.get(url, headers={"User-Agent": "Mozilla/5.0"})
@@ -91,13 +42,41 @@ def _update_sp500_tickers_table(db: TmDB):
     print(f"Uploaded the data successfully to {config.db_sp500_tickers_table} table")
 
 
+@click.group()
+@click.pass_context
+def cli(ctx):
+    ctx.ensure_object(dict)
+    ctx.obj["db"] = TmDB()
+
+
+# TODO: need to refactor this pronto, it's horrible
+@click.command(
+    help=f"Create and index {config.db_stock_price_table} and {config.db_sp500_tickers_table} tables"
+)
+@click.pass_context
+def init(ctx):
+    for query in db_vars.queries["create"].values():
+        execute_db_command(query["message"], query["query"], ctx.obj["db"])
+
+    for query in db_vars.queries["index"].values():
+        execute_db_command(query["message"], query["query"], ctx.obj["db"])
+
+    _update_sp500_tickers_table(ctx.obj["db"])
+
+
+@click.command(help="Delete tables content")
+@click.pass_context
+def delete_tables_content(ctx):
+    for query in db_vars.queries["delete"].values():
+        execute_db_command(query["message"], query["query"], ctx.obj["db"])
+
+
 @click.command(
     help=f"Update {config.db_sp500_tickers_table} table from a local csv file"
 )
 @click.pass_context
 def update_sp500_tickers_table(ctx):
     _update_sp500_tickers_table(ctx.obj["db"])
-    
 
 
 # TODO cli.add_command(create_server) # not working
