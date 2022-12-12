@@ -3,7 +3,6 @@ import datetime
 import logging
 import pandas as pd
 import click
-import sqlalchemy
 from data_provider import DataProvider
 from dateutil.relativedelta import relativedelta
 from timescale import TmDB
