@@ -46,8 +46,8 @@ create_macro_table_query = f"""
     CREATE TABLE IF NOT EXISTS {config.macro_table} (
         date DATE,
         value FLOAT,
-        type TEXT,
-        PRIMARY KEY (date, type)
+        m_type TEXT,
+        PRIMARY KEY (date, m_type)
     );
     """
 
@@ -68,7 +68,7 @@ index_stock_price_table_query = (
 
 # Index macro table
 index_macro_table_message = f"Indexed the table {config.macro_table}."
-index_macro_table_query = f"CREATE INDEX ON {config.macro_table} (type, date DESC);"
+index_macro_table_query = f"CREATE INDEX ON {config.macro_table} (m_type, date DESC);"
 
 
 # Convert stock tables to a time series table (postgres timescaledb feature)

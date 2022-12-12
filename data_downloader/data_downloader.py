@@ -191,7 +191,6 @@ def get_macros_data(ctx):
     logging.info("Interest rate data updated successfully.")
 
 
-
 cli.add_command(get_stocks_data)
 cli.add_command(get_stock_data)
 cli.add_command(get_macros_data)

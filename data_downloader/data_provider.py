@@ -58,26 +58,26 @@ class DataProvider(object):
     def get_gdp_data(self):
         df = self.fred.get_series_first_release('GDP')
         df = df.reset_index(name="value").rename(columns={"index": "date"})
-        df['type'] = 'GDP'
+        df['m_type'] = 'GDP'
         return df
 
     def get_unemployment_data(self):
         df = self.fred.get_series_first_release('UNRATE')
         df = df.reset_index(name="value").rename(columns={"index": "date"})
-        df['type'] = 'UNRATE'
+        df['m_type'] = 'UNRATE'
         return df
 
     def get_inflation_data(self):
         df = self.fred.get_series_first_release('CPIAUCSL')
         df = df.reset_index(name="value").rename(columns={"index": "date"})
-        df['type'] = 'CPIAUCSL'
+        df['m_type'] = 'CPIAUCSL'
         return df
 
 
     def get_consumer_sentiment_data(self):
         df = self.fred.get_series_first_release('UMCSENT')
         df = df.reset_index(name="value").rename(columns={"index": "date"})
-        df['type'] = 'UMCSENT'
+        df['m_type'] = 'UMCSENT'
 
         # Replace NaT values with nulls
         df = df.where(pd.notnull(df), None)
@@ -91,7 +91,7 @@ class DataProvider(object):
 
         df = self.fred.get_series_first_release_by_dates('DFF', realtime_start=start, realtime_end=end)
         df = df.reset_index(name="value").rename(columns={"index": "date"})
-        df['type'] = 'DFF'
+        df['m_type'] = 'DFF'
         return df
     
     # def get_interest_rate_data(self):
