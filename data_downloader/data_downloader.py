@@ -166,16 +166,6 @@ def get_macros_data(ctx):
     gdp_df = ctx.obj['dp'].get_gdp_data()
     gdp_df = gdp_df.reset_index(name='value').rename(columns={'index': 'date'})
 
-    # Convert the 'date' column to a datetime column
-    # gdp_df['date'] = pd.to_datetime(gdp_df['date'])
-
-    # Convert the datetime objects in the 'date' column to strings in the format '%Y-%m-%d'
-    # gdp_df['date'] = gdp_df['date'].dt.strftime('%Y-%m-%d')
-
-    # insert the data into the table "mytable"
-    # gdp_df.to_sql(config.gdp_table, ctx.obj['db'].conn, if_exists='replace', index=False,
-    #       dtype={'date': sqlalchemy.types.Date(), 'value': sqlalchemy.types.Float()})
-    
     ctx.obj['db'].upsert_data(gdp_df, config.gdp_table)
     logging.info("Macro-economics data updated successfully.")
 
