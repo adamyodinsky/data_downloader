@@ -9,6 +9,7 @@ from fred_extension import FredExtension as Fred
 
 class DataProvider(object):
     REAL_TIME_MAX_DATE = '9999-12-31'
+    MACRO_INDICATORS = ['GDP', 'UNRATE', 'CPIAUCSL', 'PPIACO', 'UMCSENT', 'M1', 'M2', 'DGS10']
 
     def __init__(self):
         self.fred = Fred(api_key=config.fred_token)
@@ -54,38 +55,28 @@ class DataProvider(object):
             logging.error(e)
         return df
 
-
-    def get_gdp_data(self):
+    
+    # and returns the data for that indicator
+    def get_macro_data(self, m_type):
         df = self.fred.get_series_first_release('GDP')
         df = df.reset_index(name="value").rename(columns={"index": "date"})
+        df = df.where(pd.notnull(df), None)
         df['m_type'] = 'GDP'
         return df
 
-    def get_unemployment_data(self):
-        df = self.fred.get_series_first_release('UNRATE')
+    # TODO: check the date range
+    def get_10yr_treasury_data(self):
+        start = '2020-01-01'
+        end = self.REAL_TIME_MAX_DATE
+
+        df = self.fred.get_series_first_release_by_dates('DGS10', realtime_start=start, realtime_end=end)
         df = df.reset_index(name="value").rename(columns={"index": "date"})
-        df['m_type'] = 'UNRATE'
-        return df
-
-    def get_inflation_data(self):
-        df = self.fred.get_series_first_release('CPIAUCSL')
-        df = df.reset_index(name="value").rename(columns={"index": "date"})
-        df['m_type'] = 'CPIAUCSL'
-        return df
-
-
-    def get_consumer_sentiment_data(self):
-        df = self.fred.get_series_first_release('UMCSENT')
-        df = df.reset_index(name="value").rename(columns={"index": "date"})
-        df['m_type'] = 'UMCSENT'
-
-        # Replace NaT values with nulls
+        df['m_type'] = 'DGS10'
         df = df.where(pd.notnull(df), None)
-
         return df
 
-
-    def get_interest_rate_data(self):
+    # TODO: check the date range
+    def get_interest_rate_data(self):   
         start = '2020-01-01'
         end = self.REAL_TIME_MAX_DATE
 
@@ -94,13 +85,3 @@ class DataProvider(object):
         df['m_type'] = 'DFF'
         return df
     
-    # def get_interest_rate_data(self):
-    #     url = f"https://api.stlouisfed.org/fred/series/observations?series_id=DFF&api_key={config.fred_token}&file_type=json"
-    #     response = requests.get(url)
-    #     data = response.json()
-    #     df = pd.DataFrame(data["observations"])
-    #     df["date"] = pd.to_datetime(df["date"])
-    #     df = df.set_index("date")
-    #     df = df.drop(columns=["realtime_start", "realtime_end"])
-    #     df = df.rename(columns={"value": "interest_rate"})
-    #     return df
