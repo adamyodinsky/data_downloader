@@ -3,13 +3,15 @@ import logging
 
 import config
 import pandas as pd
+import requests
 import yfinance as yf
 from fred_extension import FredExtension as Fred
 
 
 class DataProvider(object):
     REAL_TIME_MAX_DATE = '9999-12-31'
-    MACRO_INDICATORS = ['GDP', 'UNRATE', 'CPIAUCSL', 'PPIACO', 'UMCSENT', 'M1', 'M2', 'DGS10']
+    MACRO_INDICATORS = ['GDP', 'UNRATE', 'CPIAUCSL', 'PPIACO', 'UMCSENT', 'M1', 'M2']
+    DAILY_MACRO_INDICATORS = ['DGS10', 'VIXCLS', 'DFF']
 
     def __init__(self):
         self.fred = Fred(api_key=config.fred_token)
@@ -58,30 +60,54 @@ class DataProvider(object):
     
     # and returns the data for that indicator
     def get_macro_data(self, m_type):
-        df = self.fred.get_series_first_release('GDP')
+        df = self.fred.get_series_first_release(m_type)
         df = df.reset_index(name="value").rename(columns={"index": "date"})
         df = df.where(pd.notnull(df), None)
-        df['m_type'] = 'GDP'
+        df['m_type'] = m_type
         return df
 
-    # TODO: check the date range
-    def get_10yr_treasury_data(self):
-        start = '2020-01-01'
-        end = self.REAL_TIME_MAX_DATE
 
-        df = self.fred.get_series_first_release_by_dates('DGS10', realtime_start=start, realtime_end=end)
+    def get_daily_macro_data(self, m_type):
+        start = datetime.date.today().strftime('%Y-%m-%d')
+        end = start
+
+        df = self.fred.get_series_first_release_by_dates(m_type, realtime_start=start, realtime_end=end)
         df = df.reset_index(name="value").rename(columns={"index": "date"})
-        df['m_type'] = 'DGS10'
-        df = df.where(pd.notnull(df), None)
+        df['m_type'] = m_type
         return df
 
-    # TODO: check the date range
-    def get_interest_rate_data(self):   
-        start = '2020-01-01'
-        end = self.REAL_TIME_MAX_DATE
 
-        df = self.fred.get_series_first_release_by_dates('DFF', realtime_start=start, realtime_end=end)
-        df = df.reset_index(name="value").rename(columns={"index": "date"})
-        df['m_type'] = 'DFF'
-        return df
     
+    
+    def get_cik(symbol):
+        # Set the URL for the CIK data
+        url = "https://data.sec.gov/submissions/{}.json".format(symbol)
+        
+        # Make the request and retrieve the data
+        response = requests.get(url)
+        data = response.json()
+        
+        # Extract the CIK from the JSON data
+        cik = data['cik']
+        
+        return cik
+
+    def get_financial_data(reporting_year, symbol):
+        # Get the CIK for the stock
+        cik = get_cik(symbol)
+        
+        # Set the URL for the financial data
+        url = "https://data.sec.gov/api/xbrl/companyconcept/{}/us-gaap/AssetsCurrent.json".format(cik)
+        
+        # Make the request and retrieve the data
+        response = requests.get(url)
+        data = response.json()
+        
+        # Extract the financial data from the JSON object
+        df = pd.DataFrame(data['facts'])
+        
+        # Filter the data to include only the specified reporting year
+        df = df[df['context'].str.contains(reporting_year)]
+        
+        # Return the financial data
+        return df

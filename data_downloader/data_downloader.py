@@ -170,19 +170,15 @@ def get_macros_data(ctx):
     dp: DataProvider = ctx.obj["dp"]
     db: TmDB = ctx.obj["db"]
 
+    for indicator in DataProvider.DAILY_MACRO_INDICATORS:
+        df = dp.get_daily_macro_data_2(indicator)
+        db.upsert_data(df, config.macro_table)
+        logging.info(f"{indicator} data updated successfully.")
+
     for indicator in DataProvider.MACRO_INDICATORS:
         df = dp.get_macro_data(indicator)
         db.upsert_data(df, config.macro_table)
         logging.info(f"{indicator} data updated successfully.")
-
-
-    interest_rate_df = dp.get_interest_rate_data()
-    db.upsert_data(interest_rate_df, config.macro_table)
-    logging.info("Interest rate data updated successfully.")
-
-    ten_y_treasury_df = dp.get_10yr_treasury_data()
-    db.upsert_data(ten_y_treasury_df, config.macro_table)
-    logging.info("10y treasury data updated successfully.")
 
     logging.info("Macro data updated successfully.")
 
